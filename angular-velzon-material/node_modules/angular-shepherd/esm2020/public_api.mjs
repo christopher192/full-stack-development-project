@@ -1,0 +1,5 @@
+/*
+ * Public API Surface of shepherd
+ */
+export * from './lib/shepherd.service';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3Byb2plY3RzL3NoZXBoZXJkL3NyYy9wdWJsaWNfYXBpLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztHQUVHO0FBRUgsY0FBYyx3QkFBd0IsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiBQdWJsaWMgQVBJIFN1cmZhY2Ugb2Ygc2hlcGhlcmRcbiAqL1xuXG5leHBvcnQgKiBmcm9tICcuL2xpYi9zaGVwaGVyZC5zZXJ2aWNlJztcbiJdfQ==
