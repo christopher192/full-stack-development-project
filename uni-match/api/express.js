@@ -1,7 +1,10 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
+const Docker = require('dockerode');
 const { exec } = require('child_process');
+const { debug } = require('console');
+const docker = new Docker();
 const app = express();
 const port = 3000;
 
@@ -71,16 +74,40 @@ app.get('/submit', async (req, res) => {
     const folderName = "uni-match"
     const serviceName = "uni-match-development-project"
 
-    try { 
-        await exec(`git clone ${repoUrl} ${folderName}`);
+    try {
+        const images = await docker.listImages();
+        
+        // create a new docker container
+        const container = await docker.createContainer({
+            Image: 'node',
+            name: serviceName,
+            Cmd: ['/bin/sh', '-c', `git clone ${repoUrl} ${folderName} /app && cd /app && npm install && npm start`], // clone github repo and start the app
+            HostConfig: {
+                AutoRemove: true,
+                PortBindings: { '3000/tcp': [{ HostPort: `${10000 + Math.floor(Math.random() * 1000)}` }] } // map container port 3000 to a random port in the range 10000 - 11000
+            }
+        });
+
+        // start the container
+        await container.start();
+
+        // get the container's ip address
+        const containerInfo = await container.inspect();
+        const ipAddress = containerInfo.NetworkSettings.IPAddress;
+
+        // generate URL for accessing the service
+        const serviceUrl = `http://${ipAddress}`;
+
+        // respond with the service url
+        res.json({ serviceUrl });
     } catch(error) {
         console.error('error spinning up Docker container:', error);
-        res.status(500).send('error spinning up Docker container');
+        res.status(500).send('error spinning up docker container');
     }
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`server is running on http://localhost:${port}`);
 });
 
 // close the database connection when the server is stopped
