@@ -1,8 +1,10 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const Docker = require('dockerode');
+const fs = require('fs');
 const app = express();
 const port = 3000;
-const fs = require('fs');
+const docker = new Docker();
 
 // read the json file
 let users;
@@ -62,6 +64,20 @@ let db = new sqlite3.Database('sqlite.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+// handle submission
+app.get('/submit', async (req, res) => {
+    const repoUrl = "https://github.com/christopher192/full-stack-development-project"
+    const folderName = "uni-match"
+    const serviceName = "uni-match-development-project"
+
+    try { 
+        await exec(`git clone ${repoUrl} ${folderName}`);
+    } catch(error) {
+        console.error('error spinning up Docker container:', error);
+        res.status(500).send('error spinning up Docker container');
+    }
 });
 
 app.listen(port, () => {
