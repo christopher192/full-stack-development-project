@@ -76,31 +76,6 @@ app.get('/submit', async (req, res) => {
 
     try {
         const images = await docker.listImages();
-        console.log(images);
-        
-        // create a new docker container
-        const container = await docker.createContainer({
-            Image: 'node',
-            name: serviceName,
-            Cmd: ['/bin/sh', '-c', `git clone ${repoUrl} ${folderName} /app && cd /app && npm install && npm start`], // clone github repo and start the app
-            HostConfig: {
-                AutoRemove: true,
-                PortBindings: { '3000/tcp': [{ HostPort: `${10000 + Math.floor(Math.random() * 1000)}` }] } // map container port 3000 to a random port in the range 10000 - 11000
-            }
-        });
-
-        // start the container
-        await container.start();
-
-        // get the container's ip address
-        const containerInfo = await container.inspect();
-        const ipAddress = containerInfo.NetworkSettings.IPAddress;
-
-        // generate URL for accessing the service
-        const serviceUrl = `http://${ipAddress}`;
-
-        // respond with the service url
-        res.json({ serviceUrl });
     } catch(error) {
         console.error('error spinning up Docker container:', error);
         res.status(500).send('error spinning up docker container');
