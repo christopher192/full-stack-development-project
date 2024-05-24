@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "gender": "Male",
+    "location": "New York",
+    "university": "NYU",
+    "interests": "Programming"
+  },
+  {
+    "id": 2,
+    "name": "Jane Doe",
+    "gender": "Female",
+    "location": "Los Angeles",
+    "university": "UCLA",
+    "interests": "Design"
+  },
+  {
+    "id": 3,
+    "name": "Alice Smith",
+    "gender": "Female",
+    "location": "Chicago",
+    "university": "UChicago",
+    "interests": "Mathematics"
+  },
+  {
+    "id": 4,
+    "name": "Bob Johnson",
+    "gender": "Male",
+    "location": "San Francisco",
+    "university": "Stanford",
+    "interests": "Physics"
+  },
+  {
+    "id": 5,
+    "name": "Charlie Brown",
+    "gender": "Male",
+    "location": "Boston",
+    "university": "Harvard",
+    "interests": "Literature"
+  }
+]
