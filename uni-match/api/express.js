@@ -1,10 +1,9 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const Docker = require('dockerode');
 const fs = require('fs');
+const { exec } = require('child_process');
 const app = express();
 const port = 3000;
-const docker = new Docker();
 
 // read the json file
 let users;
