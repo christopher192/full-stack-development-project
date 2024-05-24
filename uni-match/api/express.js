@@ -76,6 +76,7 @@ app.get('/submit', async (req, res) => {
 
     try {
         const images = await docker.listImages();
+        console.log(images);
         
         // create a new docker container
         const container = await docker.createContainer({
