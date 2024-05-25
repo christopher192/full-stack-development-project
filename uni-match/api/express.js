@@ -8,11 +8,14 @@ const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const { debug } = require('console');
 
-const redisClient = redis.createClient();
+// const redisClient = redis.createClient({
+//   host: '127.0.0.1',
+//   port: '6380',
+// });
 
-redisClient.on('error', err => console.log('Redis Client Error', err));
+// redisClient.on('error', err => console.log('Redis Client Error', err));
 
-await redisClient.connect();
+// redisClient.connect();
 
 const { Request, Response } = OAuthServer;
 const docker = new Docker();
@@ -25,14 +28,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // create a dummy oauth2 server instance
 const oauth = new OAuthServer({
   model: {
-    getAccessToken: async (accessToken) => {
-      try {
-        const token = await redisClient.get(accessToken);
-        return token ? JSON.parse(token) : null;
-      } catch (error) {
-        console.error('Error retrieving access token from Redis:', error);
-        return null;
-      }
+    getAccessToken: (accessToken) => {
+      // try {
+      //   const token = await redisClient.get(accessToken);
+      //   return token ? JSON.parse(token) : null;
+      // } catch (error) {
+      //   console.error('Error retrieving access token from Redis:', error);
+      //   return null;
+      // }
     },
     getClient: (clientId, clientSecret) => {
       console.log('getClient called with:', clientId, clientSecret);
@@ -52,13 +55,13 @@ const oauth = new OAuthServer({
       return null;
     },
     saveToken: (token, client, user) => {
-      redisClient.set(token.accessToken, JSON.stringify({ token, client, user }), (error) => {
-        if (error) {
-          console.error('Error saving access token to Redis:', error);
-        } else {
-          console.log('Access token saved to Redis:', token.accessToken);
-        }
-      });
+      // redisClient.set(token.accessToken, JSON.stringify({ token, client, user }), (error) => {
+      //   if (error) {
+      //     console.error('Error saving access token to Redis:', error);
+      //   } else {
+      //     console.log('Access token saved to Redis:', token.accessToken);
+      //   }
+      // });
       return {
         accessToken: token.accessToken,
         accessTokenExpiresAt: token.accessTokenExpiresAt,

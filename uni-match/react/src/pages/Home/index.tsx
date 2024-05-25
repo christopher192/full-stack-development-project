@@ -15,6 +15,8 @@ import {
 import Flatpickr from "react-flatpickr";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { jobGrid } from "../../common/data/appsJobs";
+import { useSpring, animated } from '@react-spring/web'
+import { useDrag } from '@use-gesture/react'
 
 const Home = () => {
   document.title = "Home";
