@@ -1,12 +1,92 @@
+const fs = require('fs');
+const redis = require('redis');
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const fs = require('fs');
 const Docker = require('dockerode');
+const OAuthServer = require('oauth2-server');
+const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const { debug } = require('console');
+
+const redisClient = redis.createClient();
+
+redisClient.on('error', err => console.log('Redis Client Error', err));
+
+await redisClient.connect();
+
+const { Request, Response } = OAuthServer;
 const docker = new Docker();
 const app = express();
 const port = 3000;
+
+// use body-parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// create a dummy oauth2 server instance
+const oauth = new OAuthServer({
+  model: {
+    getAccessToken: async (accessToken) => {
+      try {
+        const token = await redisClient.get(accessToken);
+        return token ? JSON.parse(token) : null;
+      } catch (error) {
+        console.error('Error retrieving access token from Redis:', error);
+        return null;
+      }
+    },
+    getClient: (clientId, clientSecret) => {
+      console.log('getClient called with:', clientId, clientSecret);
+      if (clientId === 'dummy_client' && clientSecret === 'dummy_secret') {
+        return {
+          id: 'dummy_client',
+          redirectUris: [],
+          grants: ['password', 'refresh_token', 'client_credentials']
+        };
+      }
+        return null;
+    },
+    getUser: (username, password) => {
+      if (username === 'test' && password === 'test') {
+        return { id: 'test_user' };
+      }
+      return null;
+    },
+    saveToken: (token, client, user) => {
+      redisClient.set(token.accessToken, JSON.stringify({ token, client, user }), (error) => {
+        if (error) {
+          console.error('Error saving access token to Redis:', error);
+        } else {
+          console.log('Access token saved to Redis:', token.accessToken);
+        }
+      });
+      return {
+        accessToken: token.accessToken,
+        accessTokenExpiresAt: token.accessTokenExpiresAt,
+        refreshToken: token.refreshToken,
+        refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+        client: client,
+        user: user,
+      };
+    },
+    getRefreshToken: (refreshToken) => {
+      console.log('getRefreshToken called with:', refreshToken);
+      if (refreshToken === 'dummy_refresh_token') {
+        return {
+          refreshToken: 'dummy_refresh_token',
+          refreshTokenExpiresAt: new Date(Date.now() + 3600000),
+          client: { id: 'dummy_client' },
+          user: {},
+          scope: 'read write'
+        };
+      }
+      return null;
+    },
+    revokeToken: (token) => {
+      console.log('revokeToken called with:', token);
+      return token.refreshToken === 'dummy_refresh_token';
+    }
+  },
+});
 
 // read the json file
 let users;
@@ -75,18 +155,46 @@ app.get('/submit', async (req, res) => {
     const serviceName = "uni-match-development-project"
 
     try {
-        const images = await docker.listImages();
+      const images = await docker.listImages();
     } catch(error) {
-        console.error('error spinning up Docker container:', error);
-        res.status(500).send('error spinning up docker container');
+      console.error('error spinning up docker container:', error);
+      res.status(500).send('error spinning up docker container');
     }
+});
+
+app.post('/oauth/token', (req, res) => {
+  const request = new Request(req);
+  const response = new Response(res);
+
+  oauth
+    .token(request, response)
+    .then((token) => {
+      return res.json(token);
+    })
+    .catch((err) => {
+      return res.status(500).json(err);
+    });
+});
+
+// protected endpoint
+app.get('/protected', (req, res, next) => {
+  const request = new Request(req);
+  const response = new Response(res);
+
+  oauth.authenticate(request, response)
+    .then((token) => {
+      res.json({ message: 'you have accessed a protected endpoint!', token });
+    })
+    .catch((err) => {
+      res.status(err.code || 500).json(err);
+    });
 });
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
 });
 
-// close the database connection when the server is stopped
+// close the database connection and redis when the server is stopped
 process.on('SIGINT', () => {
   db.close((err) => {
     if (err) {
@@ -95,4 +203,5 @@ process.on('SIGINT', () => {
     console.log('close the database connection');
     process.exit(0);
   });
+  redisClient.quit();
 });
