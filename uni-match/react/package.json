@@ -83,6 +83,7 @@
     "react-scrollspy": "^3.4.3",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
+    "react-use-measure": "^2.1.1",
     "reactstrap": "^9.2.2",
     "redux": "^5.0.1",
     "reselect": "^5.1.0",
