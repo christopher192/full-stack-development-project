@@ -72,6 +72,10 @@ import JobReducer from "./jobs/reducer";
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
 
+import UserProfileReducer from "./userProfile/reducer";
+
+// User Profile
+
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
     Login: LoginReducer,
@@ -99,7 +103,8 @@ const rootReducer = combineReducers({
     FileManager: FileManagerReducer,
     Todos: TodosReducer,
     Jobs: JobReducer,
-    APIKey: APIKeyReducer
+    APIKey: APIKeyReducer,
+    UserProfile: UserProfileReducer
 });
 
 export default rootReducer;

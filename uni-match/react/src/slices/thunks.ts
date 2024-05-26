@@ -1,3 +1,5 @@
+import { ex } from "@fullcalendar/core/internal-common";
+
 // Front
 export * from "./layouts/thunk";
 
@@ -68,3 +70,6 @@ export * from "./jobs/thunk";
 
 // API Key
 export * from "./apiKey/thunk";
+
+// UserProfile
+export * from "./userProfile/thunk";

@@ -18,7 +18,7 @@ import { jobGrid } from "../../common/data/appsJobs";
 import { useSpring, animated, to } from '@react-spring/web'
 import { useGesture, useDrag } from '@use-gesture/react'
 import useMeasure from 'react-use-measure'
-import styles from './styles.module.css'
+import { useSelector, useDispatch } from "react-redux";
 
 const Home = () => {
   document.title = "Home";

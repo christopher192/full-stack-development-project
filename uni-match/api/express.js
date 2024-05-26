@@ -8,14 +8,14 @@ const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const { debug } = require('console');
 
-// const redisClient = redis.createClient({
-//   host: '127.0.0.1',
-//   port: '6380',
-// });
+const redisClient = redis.createClient({
+  host: '127.0.0.1',
+  port: '6379',
+});
 
-// redisClient.on('error', err => console.log('Redis Client Error', err));
+redisClient.on('error', err => console.log('Redis Client Error', err));
 
-// redisClient.connect();
+redisClient.connect();
 
 const { Request, Response } = OAuthServer;
 const docker = new Docker();
@@ -191,6 +191,17 @@ app.get('/protected', (req, res, next) => {
     .catch((err) => {
       res.status(err.code || 500).json(err);
     });
+});
+
+app.get('/users', (req, res) => {
+  const sql = `SELECT * FROM users`;
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.json(rows);
+  });
 });
 
 app.listen(port, () => {
