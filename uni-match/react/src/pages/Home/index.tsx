@@ -19,9 +19,19 @@ import { useSpring, animated, to } from '@react-spring/web'
 import { useGesture, useDrag } from '@use-gesture/react'
 import useMeasure from 'react-use-measure'
 import { useSelector, useDispatch } from "react-redux";
+import { getTenUserProfileData } from '../../slices/thunks';
+import { createSelector } from 'reselect';
 
 const Home = () => {
   document.title = "Home";
+
+  const dispatch: any = useDispatch();
+  const selectUserProfileData = createSelector(
+    (state: any) => state.UserProfile,
+    (userProfileList) => userProfileList.userProfileList
+  );
+
+  const [userProfileData, setUserProfileData] = useState<any>([]);
 
   const [showElement, setShowElement] = useState(true);
   const [{ border, width, height, touchAction, x, y }, api] = useSpring(() => ({ border: '1px solid black', width: '250px', height: '250px', touchAction: 'none',  x: 0, y: 0 }));
@@ -52,9 +62,15 @@ const Home = () => {
     },
   });
 
-  useEffect(() => {
+  const getUserProfileData = useSelector(selectUserProfileData);
 
-  }, []);
+  useEffect(() => {
+    setUserProfileData(getUserProfileData);
+  }, [getUserProfileData]); 
+
+  useEffect(() => {
+    dispatch(getTenUserProfileData());
+  }, [dispatch]);
 
   return (
     <React.Fragment>
@@ -63,10 +79,12 @@ const Home = () => {
           <BreadCrumb title = "Recommand List" pageTitle = "Dashboard" />
           <Row>
             <Col lg = {6}>
-              {showElement && (
-                <animated.div style = {{ border, width, height, touchAction , x, y }} 
-                  {...bind()}>
-                </animated.div>
+              {userProfileData.map((data: any, index: number) => 
+                showElement && (
+                  <animated.div key = {index} style = {{ border, width, height, touchAction, x, y }} {...bind()}>
+                    <h1>{data.id}</h1>
+                  </animated.div>
+                )
               )}
             </Col>
           </Row>

@@ -12,7 +12,7 @@ const UserProfileSlice: any = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getTenUserProfileData.fulfilled, (state: any, action: any) => {
-            state.teamData = action.payload;
+            state.userProfileList = action.payload;
         });
         builder.addCase(getTenUserProfileData.rejected, (state: any, action: any) => {
             state.error = action.payload.error || null;

@@ -7,6 +7,7 @@ const OAuthServer = require('oauth2-server');
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
 const { debug } = require('console');
+const cors = require('cors');
 
 const redisClient = redis.createClient({
   host: '127.0.0.1',
@@ -21,6 +22,9 @@ const { Request, Response } = OAuthServer;
 const docker = new Docker();
 const app = express();
 const port = 3000;
+
+// enable cors for all routes
+app.use(cors());
 
 // use body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

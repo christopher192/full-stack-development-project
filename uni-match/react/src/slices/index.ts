@@ -72,9 +72,8 @@ import JobReducer from "./jobs/reducer";
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
 
-import UserProfileReducer from "./userProfile/reducer";
-
 // User Profile
+import UserProfileReducer from "./userProfile/reducer";
 
 const rootReducer = combineReducers({
     Layout: LayoutReducer,

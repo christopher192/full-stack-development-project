@@ -23,11 +23,11 @@ const AuthProtected = (props : any) =>{
     Navigate is un-auth access protected routes via url
     */
 
-  // if (!userProfile && loading && !token) {
-  //   return (
-  //     <Navigate to={{ pathname: "/login"}} />
-  //   );
-  // }
+  if (!userProfile && loading && !token) {
+    return (
+      <Navigate to={{ pathname: "/login"}} />
+    );
+  }
 
   return <>{props.children}</>;
 };
