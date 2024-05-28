@@ -15,7 +15,7 @@ import {
 import Flatpickr from "react-flatpickr";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { jobGrid } from "../../common/data/appsJobs";
-import { useSpring, animated, to } from '@react-spring/web'
+import { useSpring, useSprings, animated, to } from '@react-spring/web'
 import { useGesture, useDrag } from '@use-gesture/react'
 import useMeasure from 'react-use-measure'
 import { useSelector, useDispatch } from "react-redux";
@@ -32,13 +32,19 @@ const Home = () => {
   );
 
   const [userProfileData, setUserProfileData] = useState<any>([]);
+  const [showElements, setShowElements] = useState(Array(userProfileData.length).fill(true));
+  const isSwipeRightRef = useRef(false);
 
-  const [showElement, setShowElement] = useState(true);
-  const [{ border, width, height, touchAction, x, y }, api] = useSpring(() => ({ border: '1px solid black', width: '250px', height: '250px', touchAction: 'none',  x: 0, y: 0 }));
+  // const [spring, api] = useSpring(() => ({ border: '1px solid black', width: '250px', height: '250px', touchAction: 'none',  x: 0, y: 0 }));
+  const [springs, apis] = useSprings(userProfileData.length, index => ({ border: '1px solid black', width: '250px', height: '250px', touchAction: 'none',  x: 0, y: 0 }));
   const bind = useGesture({
-    onDrag: ({ down, movement: [mx, my], velocity }) => { 
-      api.start({ x: down ? mx : 0, y: down ? my : 0, immediate: down });
-
+    onDrag: ({ args: [originalIndex], down, movement: [mx, my], velocity }) => {
+      // api.start({ x: down ? mx : 0, y: down ? my : 0, immediate: down });
+      apis.start(i => {
+        if (i === originalIndex){
+          return { x: down ? mx : 0, y: down ? my : 0, immediate: down };
+        }
+      });
       // ignore swipe up and down
       if (Math.abs(my) > Math.abs(mx)) {
         return;
@@ -48,24 +54,33 @@ const Home = () => {
       const isSwipeRight = velocity[0] > 0.5 && mx > 0;
 
       if (isSwipeLeft) {
-        console.log('Swipe left detected');
+        isSwipeRightRef.current = false;
       } else if (isSwipeRight) {
-        console.log('Swipe right detected');
+        isSwipeRightRef.current = isSwipeRight;
       }
 
       // drag has stopped
       if (!down) {
-        console.log('Drag has stopped');
         // hide the element
-        setShowElement(false);
+        // setShowElement(false);
+        if (isSwipeRightRef.current) {
+          setTimeout(() => {
+            const copyShowElements = [...showElements];
+            copyShowElements[originalIndex] = false;
+            setShowElements(copyShowElements);
+          }, 1500);
+        }
+        // reset the ref for the next swipe
+        isSwipeRightRef.current = false;
       }
-    },
+    }
   });
 
   const getUserProfileData = useSelector(selectUserProfileData);
 
   useEffect(() => {
     setUserProfileData(getUserProfileData);
+    setShowElements(Array(getUserProfileData.length).fill(true));
   }, [getUserProfileData]); 
 
   useEffect(() => {
@@ -78,15 +93,20 @@ const Home = () => {
         <div className = "container-fluid">
           <BreadCrumb title = "Recommand List" pageTitle = "Dashboard" />
           <Row>
-            <Col lg = {6}>
-              {userProfileData.map((data: any, index: number) => 
+              {/* {userProfileData.map((data: any, index: number) => 
                 showElement && (
-                  <animated.div key = {index} style = {{ border, width, height, touchAction, x, y }} {...bind()}>
+                  <animated.div key = {index} style = { spring } {...bind(index)}>
                     <h1>{data.id}</h1>
                   </animated.div>
                 )
-              )}
-            </Col>
+              )} */}
+              {userProfileData.length > 0 && springs.map((spring, index) => (
+                showElements[index] && (<Col lg = {4} key = {index}>
+                  <animated.div style = { spring } {...bind(index)}>
+                    <h1>{index}</h1>
+                  </animated.div>
+                </Col>)
+              ))}
           </Row>
         </div>
       </div>
