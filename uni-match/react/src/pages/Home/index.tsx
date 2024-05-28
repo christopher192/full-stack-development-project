@@ -68,7 +68,7 @@ const Home = () => {
             const copyShowElements = [...showElements];
             copyShowElements[originalIndex] = false;
             setShowElements(copyShowElements);
-          }, 1500);
+          }, 1200);
         }
         // reset the ref for the next swipe
         isSwipeRightRef.current = false;
