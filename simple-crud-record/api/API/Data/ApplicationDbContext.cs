@@ -16,8 +16,17 @@ namespace API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Record>(entity =>
+            {
+                entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 4)");
+                entity.Property(e => e.UnitCost).HasColumnType("decimal(18, 4)");
+                entity.Property(e => e.TotalRevenue).HasColumnType("decimal(18, 4)");
+                entity.Property(e => e.TotalCost).HasColumnType("decimal(18, 4)");
+                entity.Property(e => e.TotalProfit).HasColumnType("decimal(18, 4)");
+            });
         }
 
-        public DbSet<Record> Cities => Set<Record>();
+        public DbSet<Record> Records => Set<Record>();
     }
 }
