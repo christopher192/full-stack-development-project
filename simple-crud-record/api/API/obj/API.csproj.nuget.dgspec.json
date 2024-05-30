@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\API.csproj": {}
+    "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\API.csproj": {}
   },
   "projects": {
-    "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\API.csproj": {
+    "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\API.csproj",
+        "projectUniqueName": "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\API.csproj",
+        "projectPath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\API.csproj",
         "packagesPath": "C:\\Users\\christopher_hu\\.nuget\\packages\\",
-        "outputPath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\obj\\",
+        "outputPath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\christopher_hu\\AppData\\Roaming\\NuGet\\NuGet.Config",

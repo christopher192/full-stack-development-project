@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6TtC9d4e8gU=",
+  "dgSpecHash": "CWnGvfdpjv4=",
   "success": true,
-  "projectFilePath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\API.csproj",
+  "projectFilePath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\API\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\christopher_hu\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\christopher_hu\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

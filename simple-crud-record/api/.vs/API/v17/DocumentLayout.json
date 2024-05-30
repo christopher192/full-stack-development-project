@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C892F187-F2B5-4944-BD44-80EDE9C103F8}|API\\API.csproj|d:\\git\\full-stack-development-project\\simple-crud-record\\api\\api\\controllers\\recordscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C892F187-F2B5-4944-BD44-80EDE9C103F8}|API\\API.csproj|solutionrelative:api\\controllers\\recordscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RecordsController.cs",
+              "DocumentMoniker": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\Controllers\\RecordsController.cs",
+              "RelativeDocumentMoniker": "API\\Controllers\\RecordsController.cs",
+              "ToolTip": "D:\\Git\\full-stack-development-project\\simple-crud-record\\api\\API\\Controllers\\RecordsController.cs",
+              "RelativeToolTip": "API\\Controllers\\RecordsController.cs",
+              "ViewState": "AQIAADIAAAAAAAAAAAAuwEAAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-30T14:40:47.329Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
