@@ -55,35 +55,23 @@ namespace API.Controllers
         {
             var data = new Respond();
 
-            var searchForName = paging.Searches.Where(x => x.ColumnId == 1).FirstOrDefault().ColumnValue;
-            var searchForDescription = paging.Searches.Where(x => x.ColumnId == 2).FirstOrDefault().ColumnValue;
-            var searchForURL = paging.Searches.Where(x => x.ColumnId == 3).FirstOrDefault().ColumnValue;
-            var searchForType = paging.Searches.Where(x => x.ColumnId == 4).FirstOrDefault().ColumnValue;
+            var searchForRegion = paging.Searches.Where(x => x.ColumnId == 1).FirstOrDefault().ColumnValue;
+            var searchForCountry = paging.Searches.Where(x => x.ColumnId == 2).FirstOrDefault().ColumnValue;
 
             IQueryable<Record> query = null;
 
             query = _context.Records;
-            data.Total = query.Count();
+/*            data.Total = query.Count();*/
             data.Total_Page = paging.Page;
 
-/*            if (!String.IsNullOrEmpty(searchForName))
+            if (!String.IsNullOrEmpty(searchForRegion))
             {
-                query = query.Where(x => x.Name != null && x.Name.ToUpper().Contains(searchForName.ToUpper()));
+                query = query.Where(x => x.Region != null && x.Region.ToUpper().Contains(searchForRegion.ToUpper()));
             }
 
-            if (!String.IsNullOrEmpty(searchForDescription))
+            if (!String.IsNullOrEmpty(searchForCountry))
             {
-                query = query.Where(x => x.Description != null && x.Description.ToUpper().Contains(searchForDescription.ToUpper()));
-            }
-
-            if (!String.IsNullOrEmpty(searchForURL))
-            {
-                query = query.Where(x => x.URL != null && x.URL.ToUpper().Contains(searchForURL.ToUpper()));
-            }
-
-            if (!String.IsNullOrEmpty(searchForType))
-            {
-                query = query.Where(x => x.Type != null && x.Type.ToUpper().Contains(searchForType.ToUpper()));
+                query = query.Where(x => x.Country != null && x.Country.ToUpper().Contains(searchForCountry.ToUpper()));
             }
 
             if (paging.SortCol != null && !String.IsNullOrEmpty(paging.SortDir))
@@ -94,24 +82,28 @@ namespace API.Controllers
                         query = paging.SortDir == "asc" ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id);
                         break;
                     case 2:
-                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name);
+                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.Region) : query.OrderByDescending(x => x.Region);
                         break;
                     case 3:
-                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.Description) : query.OrderByDescending(x => x.Description);
+                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.Country) : query.OrderByDescending(x => x.Country);
                         break;
                     case 4:
-                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.URL) : query.OrderByDescending(x => x.URL);
+                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.ItemType) : query.OrderByDescending(x => x.ItemType);
                         break;
                     case 5:
-                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.Type) : query.OrderByDescending(x => x.Type);
+                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.OrderDate) : query.OrderByDescending(x => x.OrderDate);
+                        break;
+                    case 9:
+                        query = paging.SortDir == "asc" ? query.OrderBy(x => x.ShipDate) : query.OrderByDescending(x => x.ShipDate);
                         break;
                     default:
                         query = paging.SortDir == "asc" ? query.OrderBy(x => x.Id) : query.OrderByDescending(x => x.Id);
                         break;
                 }
-            }*/
+            }
 
             var pageb = (paging.Page - 1) * paging.PerPage;
+            data.Total = query.Count();
             var x = query.Skip(pageb).Take(paging.PerPage);
             data.Data = x.ToList();
             data.Query_Count = x.Count();
