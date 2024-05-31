@@ -83,7 +83,7 @@ function App() {
       cell: (data) => {
         return (
           <div>
-            <button type = "button" className = "btn btn-primary">Edit</button>
+            <button type = "button" className = "btn btn-primary" onClick = {() => handleCEShow(data.id, "edit")}>Edit</button>
             <button type = "button" className = "btn btn-danger" onClick = {() => handleShow(data.id)}>Delete</button>
           </div>
         );
@@ -220,6 +220,26 @@ function App() {
     setModalData({ id: '', body: '' });
   };
 
+  const [showCE, setShowCE] = useState(false);
+  const [modalCEData, setModalCEData] = useState({});
+
+  const handleCEShow = (id, status) => {
+    console.log(id);
+    setShowCE(true);
+  };
+
+  const handleCEClose = () => {
+    setShowCE(false);
+  };
+
+  const handleCreateSubmit = () => {
+    setShowCE(false);
+  };
+
+  const handleEditSubmit = () => {
+    setShowCE(false);
+  };
+
   return (
     <Container fluid>
       <Modal show = {show} onHide = {handleClose}>
@@ -232,6 +252,20 @@ function App() {
             Close
           </Button>
           <Button variant = "primary" onClick = {handleDeleteSubmit}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show = {showCE} onHide = {handleCEClose}>
+        <Modal.Header>
+          <Modal.Title>Edit Record</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Test</Modal.Body>
+        <Modal.Footer>
+          <Button variant = "secondary" onClick = {handleCEClose}>
+            Close
+          </Button>
+          <Button variant = "primary" onClick = {handleCreateSubmit}>
             Delete
           </Button>
         </Modal.Footer>
@@ -254,7 +288,7 @@ function App() {
               />
               <Button variant = "primary" onClick = {searchButton}>Search</Button>
               <Button variant = "primary" onClick = {resetButton}>Reset</Button>
-              <Button variant = "success">Create</Button>
+              <Button variant = "success" onClick = {() => handleCEShow(0, "create")}>Create</Button>
             </Card.Header>
             <Card.Body>
               <DataTable
