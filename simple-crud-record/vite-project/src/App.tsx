@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
+import moment from 'moment';
 
 function App() {
   const columns = [
@@ -83,7 +84,7 @@ function App() {
       cell: (data) => {
         return (
           <div>
-            <button type = "button" className = "btn btn-primary" onClick = {() => handleCEShow(data.id, "edit")}>Edit</button>
+            <button type = "button" className = "btn btn-primary" onClick = {() => handleCEShow(data, "edit")}>Edit</button>
             <button type = "button" className = "btn btn-danger" onClick = {() => handleShow(data.id)}>Delete</button>
           </div>
         );
@@ -148,25 +149,25 @@ function App() {
     try {
       const response = await axios.post('https://localhost:44379/api/records', record);
       if (response.status === 201) {
-        console.log('Record created successfully');
+        fetchData(page, perPage, sortCol, sortDir, searchRegionValue, searchCountryValue);
       } else {
-        console.log('Error creating record: ', response);
+        console.log('error creating record: ', response);
       }
     } catch (error) {
-      console.error('Error creating record: ', error);
+      console.error('error creating record: ', error);
     }
   };
   
   const updateRecord = async (id, updatedRecord) => {
     try {
       const response = await axios.put(`https://localhost:44379/api/records/${id}`, updatedRecord);
-      if (response.status === 200) {
-        console.log('Record updated successfully');
+      if (response.status === 204) {
+        fetchData(page, perPage, sortCol, sortDir, searchRegionValue, searchCountryValue);
       } else {
-        console.log('Error updating record: ', response);
+        console.log('error updating record: ', response);
       }
     } catch (error) {
-      console.error('Error updating record: ', error);
+      console.error('error updating record: ', error);
     }
   };
 
@@ -220,24 +221,104 @@ function App() {
     setModalData({ id: '', body: '' });
   };
 
-  const [showCE, setShowCE] = useState(false);
-  const [modalCEData, setModalCEData] = useState({});
+  const [formData, setFormData] = useState({
+    id: 0,
+    region: '',
+    country: '',
+    itemType: '',
+    salesChannel: '',
+    orderPriority: '',
+    orderDate: '',
+    orderID: 0,
+    shipDate: '',
+    unitsSold: 0,
+    unitPrice: 0,
+    unitCost: 0,
+    totalRevenue: 0,
+    totalCost: 0,
+    totalProfit: 0
+  });
 
-  const handleCEShow = (id, status) => {
-    console.log(id);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const [showCE, setShowCE] = useState(false);
+  const [modalCEData, setModalCEData] = useState({ status: '' });
+
+  const handleCEShow = (data, status) => {
+    setModalCEData({ status: status });
+    if (status === "edit") {
+      data.orderDate =  moment(data.orderDate).format('YYYY-MM-DD');
+      data.shipDate =  moment(data.shipDate).format('YYYY-MM-DD');
+      setFormData(data);
+    }
     setShowCE(true);
   };
 
   const handleCEClose = () => {
     setShowCE(false);
+    setFormData({
+      id: 0,
+      region: '',
+      country: '',
+      itemType: '',
+      salesChannel: '',
+      orderPriority: '',
+      orderDate: '',
+      orderID: 0,
+      shipDate: '',
+      unitsSold: 0,
+      unitPrice: 0,
+      unitCost: 0,
+      totalRevenue: 0,
+      totalCost: 0,
+      totalProfit: 0
+    });
   };
 
   const handleCreateSubmit = () => {
+    createRecord(formData);
     setShowCE(false);
+    setFormData({
+      id: 0,
+      region: '',
+      country: '',
+      itemType: '',
+      salesChannel: '',
+      orderPriority: '',
+      orderDate: '',
+      orderID: 0,
+      shipDate: '',
+      unitsSold: 0,
+      unitPrice: 0,
+      unitCost: 0,
+      totalRevenue: 0,
+      totalCost: 0,
+      totalProfit: 0
+    });
   };
 
   const handleEditSubmit = () => {
+    updateRecord(formData.id, formData);
     setShowCE(false);
+    setFormData({
+      id: 0,
+      region: '',
+      country: '',
+      itemType: '',
+      salesChannel: '',
+      orderPriority: '',
+      orderDate: '',
+      orderID: 0,
+      shipDate: '',
+      unitsSold: 0,
+      unitPrice: 0,
+      unitCost: 0,
+      totalRevenue: 0,
+      totalCost: 0,
+      totalProfit: 0
+    });
   };
 
   return (
@@ -258,16 +339,95 @@ function App() {
       </Modal>
       <Modal show = {showCE} onHide = {handleCEClose}>
         <Modal.Header>
-          <Modal.Title>Edit Record</Modal.Title>
+          <Modal.Title>{modalCEData.status === "edit" ? "Edit Record" : "Create Record" }</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Test</Modal.Body>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId = "formRegion">
+              <Form.Label>Region:</Form.Label>
+              <Form.Control type = "text" name = "region" value = {formData.region} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formCountry">
+              <Form.Label>Country:</Form.Label>
+              <Form.Control type = "text" name = "country" value = {formData.country} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formItemType">
+              <Form.Label>Item Type:</Form.Label>
+              <Form.Control type = "text" name = "itemType" value = {formData.itemType} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formSalesChannel">
+              <Form.Label>Sales Channel:</Form.Label>
+              <Form.Control type = "text" name = "salesChannel" value = {formData.salesChannel} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formOrderPriority">
+              <Form.Label>Order Priority:</Form.Label>
+              <Form.Control type = "text" name = "orderPriority" value = {formData.orderPriority} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formOrderDate">
+              <Form.Label>Order Date:</Form.Label>
+              <Form.Control type = "date" name = "orderDate" value = {formData.orderDate} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formOrderID">
+              <Form.Label>Order ID:</Form.Label>
+              <Form.Control type="number" name = "orderID" value = {formData.orderID} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formShipDate">
+              <Form.Label>Ship Date:</Form.Label>
+              <Form.Control type = "date" name = "shipDate" value = {formData.shipDate} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formUnitsSold">
+              <Form.Label>Units Sold:</Form.Label>
+              <Form.Control type = "number" name = "unitsSold" value = {formData.unitsSold} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formUnitPrice">
+              <Form.Label>Unit Price:</Form.Label>
+              <Form.Control type = "number" name = "unitPrice" value = {formData.unitPrice} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formUnitCost">
+              <Form.Label>Unit Cost:</Form.Label>
+              <Form.Control type = "number" name = "unitCost" value = {formData.unitCost} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formTotalRevenue">
+              <Form.Label>Total Revenue:</Form.Label>
+              <Form.Control type = "number" name = "totalRevenue" value = {formData.totalRevenue} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formTotalCost">
+              <Form.Label>Total Cost:</Form.Label>
+              <Form.Control type = "number" name = "totalCost" value = {formData.totalCost} onChange = {handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId = "formTotalProfit">
+              <Form.Label>Total Profit:</Form.Label>
+              <Form.Control type = "number" name = "totalProfit" value = {formData.totalProfit} onChange = {handleChange} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant = "secondary" onClick = {handleCEClose}>
             Close
           </Button>
-          <Button variant = "primary" onClick = {handleCreateSubmit}>
-            Delete
-          </Button>
+          {modalCEData.status === 'edit' ? (
+              <Button variant = "primary" onClick = {handleEditSubmit}>
+                Edit
+              </Button>
+            ) : (
+              <Button variant = "primary" onClick = {handleCreateSubmit}>
+                Create
+              </Button>
+            )
+          }
         </Modal.Footer>
       </Modal>
       <Row>
@@ -288,7 +448,7 @@ function App() {
               />
               <Button variant = "primary" onClick = {searchButton}>Search</Button>
               <Button variant = "primary" onClick = {resetButton}>Reset</Button>
-              <Button variant = "success" onClick = {() => handleCEShow(0, "create")}>Create</Button>
+              <Button variant = "success" onClick = {() => handleCEShow(null, "create")}>Create</Button>
             </Card.Header>
             <Card.Body>
               <DataTable
