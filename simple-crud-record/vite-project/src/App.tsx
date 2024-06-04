@@ -114,7 +114,7 @@ function App() {
     setSearchRegionValue("");
     setCountry("");
     setSearchCountryValue("");
-};
+  };
 
   const fetchData = async (page, perPage, sortCol, sortDir, searchRegionValue, searchCountryValue) => {
     setIsLoading(true);
@@ -321,6 +321,13 @@ function App() {
     });
   };
 
+  using System.Globalization;
+    
+  string keyword = "deprecated";
+  TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+  string titleCase = textInfo.ToTitleCase(keyword);
+  Console.WriteLine(titleCase); // Output: "Deprecated"
+  
   return (
     <Container fluid>
       <Modal show = {show} onHide = {handleClose}>
