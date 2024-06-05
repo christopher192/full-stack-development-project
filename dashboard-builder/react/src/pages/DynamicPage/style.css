@@ -1,0 +1,14 @@
+/* body,
+html, #root, #root > div {
+  height: 100%;
+  margin: 0;
+} */
+
+#gjs {
+  height: 0px; 
+  overflow: hidden
+}
+
+div.gjs-pn-panel.gjs-pn-devices-c.gjs-one-bg.gjs-two-color {
+  padding: 5px 5px 2px 5px;
+}
