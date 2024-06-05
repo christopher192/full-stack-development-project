@@ -1,0 +1,161 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.User.L1AdminEditModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "user" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "User Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Body-->
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="user.Id" class="form-control" type="hidden" />
+                            <input asp-for="user.UserName" class="form-control" type="hidden" />
+                            <input asp-for="user.DisplayName" class="form-control" type="hidden" />
+                            <input asp-for="user.Email" class="form-control" type="hidden" />
+                            <input asp-for="user.Title" class="form-control" type="hidden" />
+                            <input asp-for="user.EmployeeType" class="form-control" type="hidden" />
+                            <input asp-for="user.Department" class="form-control" type="hidden" />
+                            <input asp-for="user.CostCenterID" class="form-control" type="hidden" />
+                            <input asp-for="user.CostCenterName" class="form-control" type="hidden" />
+                            <input asp-for="user.ProfilePicture" class="form-control" type="hidden" />
+
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="user.ProfilePicture" class="h3 d-block"></label>
+                                    @if (!String.IsNullOrEmpty(Model.user.ProfilePicture))
+                                    {
+                                        <div class="symbol symbol-50 symbol-lg-150 pt-3">
+                                            <img src="data:image/png;base64,@Model.user.ProfilePicture" alt="Profile Picture" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="symbol symbol-50 symbol-lg-150 pt-3">
+                                            <img src="~/assets/media/users/blank.png" alt="Profile Picture" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="separator separator-solid"></div>
+                            <div class="form-group row mt-8">
+                                <div class="col-4">
+                                    <label asp-for="user.UserName"></label>
+                                    <input asp-for="user.UserName" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="user.DisplayName"></label>
+                                    <input asp-for="user.DisplayName" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="user.Email"></label>
+                                    <input asp-for="user.Email" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4">
+                                    <label asp-for="user.Title"></label>
+                                    <input asp-for="user.Title" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="user.EmployeeType"></label>
+                                    <input asp-for="user.EmployeeType" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="user.Department"></label>
+                                    <input asp-for="user.Department" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4">
+                                    <label asp-for="user.CostCenterID"></label>
+                                    <input asp-for="user.CostCenterID" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    <label asp-for="user.CostCenterName"></label>
+                                    <input asp-for="user.CostCenterName" class="form-control" disabled />
+                                </div>
+                                <div class="col-4">
+                                    @if (UserManager.GetUserAsync(User).Result.UserName == Model.user.UserName) 
+                                    { 
+                                        <label asp-for="user.UploadImage">Upload Image</label>
+                                        <input type="file" asp-for="user.UploadImage" class="form-control" />
+                                        <span asp-validation-for="user.UploadImage" class="text-danger"></span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Roles List</label>
+                                <div class="checkbox-inline">
+                                    @for (int i = 0; i < Model.rolesList.Count(); i++)
+                                    {
+                                        <input type="hidden" asp-for="rolesList[i].Value" />
+                                        <input type="hidden" asp-for="rolesList[i].Text" />
+                                        <input type="hidden" asp-for="rolesList[i].Selected" />
+                                    }
+
+                                    @foreach (var item in Model.rolesList)
+                                    {
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="SelectedRole" value="@item.Value" checked="@item.Selected" disabled="disabled" />
+                                            <span></span>
+                                            @item.Value
+                                        </label>
+                                    }
+                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="L1AdminPage" class="btn btn-light">Back</a>
+                            @if (UserManager.GetUserAsync(User).Result.UserName == Model.user.UserName)
+                            {
+                                <input type="submit" value="Edit" class="btn btn-primary" />                  
+                            }
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

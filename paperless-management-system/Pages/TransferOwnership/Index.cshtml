@@ -1,0 +1,386 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.TransferOwnership.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Transfer Ownership";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "ownership" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Transfer Ownership" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Dashboard-->
+                <!--begin::Row-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-custom gutter-b card-stretch">
+                            <form id="transferform" method="post">
+                                <div class="card-body mt-10">
+                                    <div class="container-fluid">
+                                        <input class="form-control" type="hidden" name="FormIdCollection" id="FormIdCollection" />
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>Current Owner</label>
+                                                    <select class="form-control select2" id="CurrentOwner" name="CurrentOwner" multiple="multiple">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label>New Owner</label>
+                                                    <select class="form-control select2" id="NewOwner" name="NewOwner" disabled="disabled">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mt-15">
+
+                                                <table class="table table-bordered table-hover table-checkable" id="masterform_datatable" style="margin-top: 13px !important" width="100%">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>Status</th>
+                                                            <th>Form Name</th>
+                                                            <th>Form Description</th>
+                                                            <th>Status</th>
+                                                            <th>Revision</th>
+                                                            <th>Owner Name</th>
+                                                            <th>Employee Id</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Transfer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Row-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $("#masterform_datatable").DataTable({
+            stateSave: true,
+            processing: true,
+            serverSide: true,
+            paging: true,
+            responsive: true,
+            autoWidth: false,
+            searching: { regex: true },
+            lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+            dom: `<'row'<'col-sm-12'tr>>
+                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+            language: {
+                'lengthMenu': 'Display _MENU_',
+            },
+            ajax: {
+                url: "@Url.Action("LoadTransferOwnershipTable", "DataTable")",
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: function (d) {
+                    return JSON.stringify(d);
+                }
+            },
+            headerCallback: function (thead, data, start, end, display) {
+                thead.getElementsByTagName('th')[0].innerHTML = `
+                    <label class="checkbox checkbox-single">
+                        <input type="checkbox" class="group-checkable" id="group-checkable" />
+                        <span></span>
+                    </label>`;
+            },
+            columns: [
+                { data: "id" },
+                { data: "masterFormName" },
+                { data: "masterFormDescription" },
+                { data: "masterFormStatus" },
+                { data: "masterFormRevision" },
+                { data: "createdBy" },
+                { data: "owner" },
+            ],
+            columnDefs: [
+                {
+                    targets: 0,
+                    width: '30px',
+                    className: 'dt-left',
+                    orderable: false,
+                    render: function (data, type, full, meta) {
+                        return `
+                            <label class="checkbox checkbox-single">
+                                <input type="checkbox" id="FormIdCollection" name="FormIdCollection" value="${data}" class="checkable"/>
+                                <span></span>
+                            </label>`;
+                    },
+                },
+                {
+                    targets: 2,
+                    render: function (data) {
+                        return data !== null ? data : "Not Available";
+                    },
+                },
+                {
+                    targets: 3,
+                    render: function (data, type, full, meta) {
+                        var status = {
+                            'active': { 'title': 'Active', 'class': ' label-light-primary' },
+                            'inactive': { 'title': 'Inactive', 'class': ' label-secondary' },
+                            'editing': { 'title': 'Editing', 'class': ' label-light-info' },
+                            'pending': { 'title': 'Pending', 'class': ' label-light-warning' },
+                            'rejected': { 'title': 'Rejected', 'class': ' label-light-danger' }
+                        };
+
+                        if (typeof status[data] === 'undefined') {
+                            return data;
+                        }
+
+                        return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
+                    },
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, full, meta) {
+                        return 'Rev ' + data;
+                    },
+                }
+            ]
+        });
+
+        table.on('change', '.group-checkable', function () {
+            var set = $(this).closest('table').find('td:first-child .checkable');
+            var checked = $(this).is(':checked');
+
+            $(set).each(function () {
+                if (checked) {
+                    $(this).prop('checked', true);
+                    $(this).closest('tr').addClass('active');
+                }
+                else {
+                    $(this).prop('checked', false);
+                    $(this).closest('tr').removeClass('active');
+                }
+            });
+        });
+
+        table.on('change', 'tbody tr .checkbox', function () {
+            $(this).parents('tr').toggleClass('active');
+        });
+
+        $('#NewOwner').select2({
+            allowClear: true,
+            placeholder: "Select New Owner",
+            ajax: {
+                url: "@Url.Action("AllOwnerList", "api")",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        FindOwner: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            }
+        });
+
+        $('#CurrentOwner').select2({
+            placeholder: "Select Current Owner",
+            ajax: {
+                url: "@Url.Action("GetMasterFormOwner", "api")",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        FindOwner: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            }
+        });
+
+        var selectOwner = [];
+
+        $('#CurrentOwner').on('select2:select', function (e) {
+            selectOwner.push(e.params.data.value);
+            var joinString = "?myparam=" + selectOwner.join("&myparam=");
+
+            if (selectOwner.length !== 0) {
+                table.ajax.url("@Url.Action("LoadTransferOwnershipTable", "DataTable")" + joinString).load();
+
+                $("#NewOwner").val(null).trigger('change');
+                $('#NewOwner').prop("disabled", false).select2({
+                    allowClear: true,
+                    placeholder: "Select New Owner",
+                    ajax: {
+                        url: "@Url.Action("AllOwnerList", "api")" + joinString,
+                        dataType: 'json',
+                        data: function (params) {
+                            return {
+                                FindOwner: params.term
+                            };
+                        },
+                        processResults: function (data, page) {
+                            return { results: data };
+                        },
+                        cache: true
+                    },
+                    error: function () {
+                        alert('Failed');
+                    }
+                });
+            }
+            else {
+                $('#NewOwner').prop("disabled", true);
+            }
+        });
+
+        $('#CurrentOwner').on("select2:unselecting", function (e) {
+            for (var i = 0; i < selectOwner.length; i++) {
+                if (selectOwner[i] === e.params.args.data.value) {
+                    selectOwner.splice(i, 1);
+                }
+            }
+
+            var joinString = "?myparam=" + selectOwner.join("&myparam=");
+            if (selectOwner.length !== 0) {
+                table.ajax.url("@Url.Action("LoadTransferOwnershipTable", "DataTable")" + joinString).load();
+
+                $("#NewOwner").val(null).trigger('change');
+                $('#NewOwner').prop("disabled", false).select2({
+                    allowClear: true,
+                    placeholder: "Select New Owner",
+                    ajax: {
+                        url: "@Url.Action("AllOwnerList", "api")" + joinString,
+                        dataType: 'json',
+                        data: function (params) {
+                            return {
+                                FindOwner: params.term
+                            };
+                        },
+                        processResults: function (data, page) {
+                            return { results: data };
+                        },
+                        cache: true
+                    },
+                    error: function () {
+                        alert('Failed');
+                    }
+                });
+            }
+            else {
+                table.ajax.url("@Url.Action("LoadTransferOwnershipTable", "DataTable")").load();
+
+                $("#NewOwner").val(null).trigger('change');
+                $('#NewOwner').prop("disabled", true);
+            }
+        });
+
+        $("#transferform").submit(function (event) {
+            // Get all checked rows
+            var rowcollection = table.$(".checkable:checked", { "page": "all" });
+            var formidcollection = [];
+
+            //Loop through all the selected checkboxes to perform desired actions
+            rowcollection.each(function (index, elem) {
+                var checkbox_value = $(elem).val();
+                formidcollection.push(parseInt(checkbox_value));
+            });
+
+            var inputFormIdCollection = document.getElementById("FormIdCollection");
+            inputFormIdCollection.value = formidcollection;
+
+            var wirteHTML = "";
+            var formNumber = formidcollection.length;
+            var owner = selectOwner;
+            var newOwner = $('#NewOwner').val();
+
+            if (formNumber !== 0) {
+                wirteHTML += "Transfer all form " + formNumber + " under ";
+
+                for (var i = 0; i < owner.length; i++) {
+                    if (i == 0) {
+                        wirteHTML += owner[i];
+                    }
+                    else {
+                        wirteHTML += ", " + owner[i];
+                    }
+                }
+
+                if (newOwner !== null) {
+                    wirteHTML += " to ";
+                    wirteHTML += newOwner;
+                };
+            }
+            else {
+                wirteHTML = "No selected form";
+            }
+
+            Swal.fire({
+                title: "Are you sure want to transfer form?",
+                text: wirteHTML,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes"
+            }).then(function (result) {
+                if (result.isConfirmed === true) {
+                    document.getElementById("transferform").submit();
+                }
+            })
+
+            event.preventDefault();
+        });
+    });
+</script>

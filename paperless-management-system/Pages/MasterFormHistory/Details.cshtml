@@ -1,0 +1,76 @@
+﻿@page "{Id?}/{ReturlURL?}"
+@model WD_ERECORD_CORE.Pages.MasterFormHistory.DetailsModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Master Form History";
+}
+
+<style>
+    .embed-responsive-1by1::before {
+        padding-top: 60% !important;
+    }
+</style>
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "masterform-history" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Master Form History" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Create-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+
+                        <div class="embed-responsive embed-responsive-1by1 mobile-res">
+                            <iframe class="embed-responsive-item" src="@Url.Action("MasterFormView", "MasterFormHistory", new { Id = Model.Id })"></iframe>
+                        </div>
+
+                    </div>
+                    <!--end::Body-->
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-secondary" asp-page="@Model.ReturlURL">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Form Create-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type='text/javascript'>
+
+</script>

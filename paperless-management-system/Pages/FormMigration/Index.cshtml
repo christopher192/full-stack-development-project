@@ -1,0 +1,595 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.FormMigration.IndexModel
+@inject IAntiforgery antiforgery
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Form Migration";
+
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "form-migration" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Form Migration" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Database Destination
+                        </div>
+                        <div class="card-toolbar">
+
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group d-flex justify-content-end">
+                                <button class="btn btn-primary" id="verifyConnection" type="submit" asp-page-handler="VerifyConnection"><i class="flaticon-search"></i> Verify Connection</button>
+                            </div>
+                            @if (!String.IsNullOrEmpty(ViewData["Database Connection Warning"] as string))
+                            {
+                                <div class="alert alert-custom alert-outline-2x alert-outline-warning fade show mb-5" role="alert">
+                                    <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                                    <div class="alert-text">@ViewData["Database Connection Warning"].ToString()</div>
+                                    <div class="alert-close">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            @if (!String.IsNullOrEmpty(ViewData["Database Connection Success"] as string))
+                            {
+                                <div class="alert alert-custom alert-outline-2x alert-outline-success fade show mb-5" role="alert">
+                                    <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                                    <div class="alert-text">@ViewData["Database Connection Success"].ToString()</div>
+                                    <div class="alert-close">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label asp-for="FormMigrationViewModel.HostName" class="control-label">Host Name <span class="text-danger">*</span></label>
+                                <input asp-for="FormMigrationViewModel.HostName" class="form-control" />
+                                <span asp-validation-for="FormMigrationViewModel.HostName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="FormMigrationViewModel.ServiceNameOrSID" class="control-label">Service Name/ SID <span class="text-danger">*</span></label>
+                                    <input asp-for="FormMigrationViewModel.ServiceNameOrSID" class="form-control" />
+                                    <span asp-validation-for="FormMigrationViewModel.ServiceNameOrSID" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="FormMigrationViewModel.Port" class="control-label">Port <span class="text-danger">*</span></label>
+                                    <input asp-for="FormMigrationViewModel.Port" class="form-control" />
+                                    <span asp-validation-for="FormMigrationViewModel.Port" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="FormMigrationViewModel.UserName" class="control-label">User Name<span class="text-danger">*</span></label>
+                                    <input asp-for="FormMigrationViewModel.UserName" class="form-control" />
+                                    <span asp-validation-for="FormMigrationViewModel.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="FormMigrationViewModel.Password" class="control-label">Password <span class="text-danger">*</span></label>
+                                    <input asp-for="FormMigrationViewModel.Password" class="form-control" />
+                                    <span asp-validation-for="FormMigrationViewModel.Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="separator separator-dashed my-10"></div>
+                            <div class="form-group">
+                                <div class="alert alert-custom alert-default" role="alert">
+                                    <div class="alert-icon">
+                                        <span class="svg-icon svg-icon-primary svg-icon-xl">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Tools/Compass.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <polygon points="0 0 24 0 24 24 0 24" />
+                                                    <path d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                    <rect fill="#000000" x="6" y="11" width="9" height="2" rx="1" />
+                                                    <rect fill="#000000" x="6" y="15" width="5" height="2" rx="1" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                    </div>
+                                    <div class="alert-text">Kindly select <code>.Master Form</code> you would like to migrate.</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control select2" asp-for="FormMigrationViewModel.SelectMasterFormId"></select>
+                                <span asp-validation-for="FormMigrationViewModel.SelectMasterFormId" class="text-danger"></span>
+                            </div>
+                            <div id="migratedFormDetail" style="display: none;">
+                                <div class="separator separator-dashed my-10"></div>
+                                <div class="form-group">
+                                    <div class="alert alert-custom alert-default" role="alert">
+                                        <div class="alert-icon">
+                                            <span class="svg-icon svg-icon-primary svg-icon-xl">
+                                                <!--begin::Svg Icon | path:assets/media/svg/icons/Tools/Compass.svg-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <polygon points="0 0 24 0 24 24 0 24" />
+                                                        <path d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" />
+                                                        <rect fill="#000000" x="6" y="11" width="9" height="2" rx="1" />
+                                                        <rect fill="#000000" x="6" y="15" width="5" height="2" rx="1" />
+                                                    </g>
+                                                </svg>
+                                                <!--end::Svg Icon-->
+                                            </span>
+                                        </div>
+                                        <div class="alert-text">Migrated master form details.</div>
+                                    </div>
+                                </div>
+
+                                <!-- basic detail -->
+                                <div class="form-group mt-3">
+                                    <h4>Basic Detail</h4>
+                                </div>
+                                <div class="separator separator-solid"></div>
+                                <div class="form-group row mt-10">
+                                    <label class="col-3 col-form-label">Master Form Name:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-name" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Status:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-status" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Owner:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-owner" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Allowed Departments:</label>
+                                    <div class="col-9">
+                                        <textarea class="form-control" type="text" rows="3" id="master-form-allowed-departments" disabled></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Created By:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-createdby" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Modified By:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-modifiedby" disabled />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Submitted By:</label>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text" id="master-form-submittedby" disabled />
+                                    </div>
+                                </div>
+                                <div class="separator separator-dashed my-10"></div>
+
+                                <!-- form approval detail -->
+                                <div class="form-group mt-3">
+                                    <h4>Form Approval Detail</h4>
+                                </div>
+                                <div class="separator separator-solid"></div>
+                                <div class="form-group mt-5">
+                                    <ul class="nav nav-tabs nav-tabs-line">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#fixable_formapproval">Fixable</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#editable_formapproval">Editable</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content mt-5">
+                                        <div class="tab-pane fade show active" id="fixable_formapproval" role="tabpanel" aria-labelledby="fixable_formapproval"></div>
+                                        <div class="tab-pane fade" id="editable_formapproval" role="tabpanel" aria-labelledby="editable_formapproval"></div>
+                                    </div>
+                                </div>                               
+                                <div class="separator separator-dashed my-10"></div>
+
+                                <!-- ccb form approval detail -->
+                                <div class="form-group mt-3">
+                                    <h4>CCB Approval Detail</h4>
+                                </div>
+                                <div class="separator separator-solid"></div>
+                                <div class="form-group mt-5">
+                                    <div id="hasContent" style="display: none;">
+                                        <ul class="nav nav-tabs nav-tabs-line" id="departmentNav"></ul>
+                                        <div class="tab-content mt-5" id="myTabContent"></div>
+                                    </div>
+                                    <div id="noContent" style="display: none;">
+                                        <div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No CCB Approval</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <input type="submit" value="Migrate" class="btn btn-primary" />
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#verifyConnection").click(function () {
+            $("#FormMigrationViewModel_SelectMasterFormId").rules("remove", "required");
+        });
+
+        $('#FormMigrationViewModel_SelectMasterFormId').select2({
+            placeholder: "Select Master Form",
+            allowClear: true,
+            blurOnChange: true,
+            openOnEnter: false,
+            ajax: {
+                type: 'GET',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("Index", "FormMigration")?handler=MasterFormList',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        searchBy: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            },
+            formatResult: function (data) {
+                return "<div class='select2-user-result'>" + data.client + "</div>";
+            },
+            formatSelection: function (data) {
+                return data.client;
+            },
+            templateSelection: function (data, container) {
+                if (data.value === undefined) {
+                        return "Select Master Form";
+                }
+                return data.value;
+            }
+        });
+
+        $('#FormMigrationViewModel_SelectMasterFormId').on('select2:select', function (e) { 
+            var masterFormId = e.params.data.id;
+            
+            if (masterFormId) 
+            {
+                $("#migratedFormDetail").css("display", "none");
+                $("#hasContent").css("display", "none");
+                $("#noContent").css("display", "none");
+                $("#departmentNav").empty();
+                $("#myTabContent").empty();
+                $("#master-form-name").val("");
+                $("#master-form-status").val("");
+                $("#master-form-owner").val("");
+                $("#master-form-allowed-departments").val("");
+                $("#master-form-createdby").val("");
+                $("#master-form-modifiedby").val("");
+                $("#master-form-submittedby").val("");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Index", "FormMigration")?handler=MasterForm',
+                    data: JSON.stringify(masterFormId),
+                    headers: { "RequestVerificationToken": "@token" },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        console.log(data);
+                        
+                        if (data !== null) {
+                            function capitalizeFirstLetter(txt) {
+                                return txt.charAt(0).toUpperCase() + txt.slice(1);
+                            }
+
+                            var masterFormName = data.masterFormName;
+
+                            if (data.masterFormDescription) {
+                                masterFormName += (" - " + data.masterFormDescription)
+                            }
+                            $("#master-form-name").val(masterFormName);
+
+                            var masterFormStatus = capitalizeFirstLetter(data.masterFormStatus);
+                            $("#master-form-status").val(masterFormStatus);
+                   
+                            var masterFormOwner = data.owner;
+                            $("#master-form-owner").val(masterFormOwner);
+
+                            var masterFormAllowedDepartments = JSON.parse(data.permittedDepartments).join(", ");
+                            $("#master-form-allowed-departments").val(masterFormAllowedDepartments);
+
+                            var masterFormCreatedBy = "Not Available";
+                            
+                            if (data.createdBy) {
+                                masterFormCreatedBy = data.createdBy;
+
+                                if (data.createdDate) 
+                                {
+                                    masterFormCreatedBy += (" - " + moment(data.createdDate).format('MMMM Do YYYY, h:mm:ss a'));
+                                } 
+                            }
+                            $("#master-form-createdby").val(masterFormCreatedBy);
+
+                            var masterFormModifiedBy = "Not Available";
+
+                            if (data.modifiedBy) {
+                                masterFormModifiedBy = data.modifiedBy;
+
+                                if (data.modifiedDate) {
+                                    masterFormModifiedBy += (" - " + moment(data.modifiedDate).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+                            }
+                            $("#master-form-modifiedby").val(masterFormModifiedBy);
+
+                            var masterFormSubmittedBy = "Not Available";
+
+                            if (data.submittedBy) {
+                                masterFormSubmittedBy = data.submittedBy;
+
+                                if (data.submittedDate) {
+                                        masterFormSubmittedBy += (" - " + moment(data.submittedDate).format('MMMM Do YYYY, h:mm:ss a'));
+                                }
+                            }
+                            $("#master-form-submittedby").val(masterFormSubmittedBy);
+
+                            if (data.formApprovalJSON) {
+                                var formApproval = JSON.parse(data.formApprovalJSON);
+                                console.log(formApproval);
+                                if (formApproval.FixFormApproval && formApproval.FixFormApproval.length > 0) {
+                                    var detailHTML = '';
+                                    detailHTML += '<div class="table-responsive">';
+                                    detailHTML += '<table class="table">';
+                                    detailHTML += '<thead>';
+                                    detailHTML += '<tr>';
+                                    detailHTML += '<th scope="col">No';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Approve Condition';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Notification Type';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Email Reminder';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Approvers';
+                                    detailHTML += '</th>';
+                                    detailHTML += '</tr>';
+                                    detailHTML += '</thead>';
+                                    detailHTML += '</thead>';
+                                    detailHTML += '<tbody>';
+
+                                    for (let i = 0; i < formApproval.FixFormApproval.length; i++) {
+                                        var approvalLevel = formApproval.FixFormApproval[i];
+
+                                        detailHTML += '<tr>';
+                                        detailHTML += '<th scope="row">' + (i + 1).toString() + '.</th>';
+                                        detailHTML += '<td>' + (approvalLevel.ApproveCondition === "single" ? "Single" : "All") + '</td>';
+                                        detailHTML += '<td>' + approvalLevel.NotificationType + '</td>';
+                                        detailHTML += '<td>' + approvalLevel.EmailReminder + " " + approvalLevel.ReminderType + '</td>';
+                                        detailHTML += '<td>';
+
+                                        if (approvalLevel.FormApprovers !== null && approvalLevel.FormApprovers.length > 0) {
+                                            for (let j = 0; j < approvalLevel.FormApprovers.length; j++) {
+                                                detailHTML += '<span class="d-block">' + (j + 1).toString() + '. ' + approvalLevel.FormApprovers[j].ApproverName + '</span>';
+                                            }
+                                        }
+                                        else {
+                                            detailHTML += '<p>No Approvers</p>';
+                                        }
+                                            
+                                        detailHTML += '</td>'
+                                        detailHTML += '</tr>';
+                                    }
+                                        
+                                    detailHTML += '</tbody>';
+                                    detailHTML += '</table>';
+                                    detailHTML += '</div>';
+
+                                    $("#fixable_formapproval").html(detailHTML);
+                                } else { 
+                                    $("#fixable_formapproval").html('<div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No Approval</p></div>');
+                                }
+
+                                if (formApproval.EditableFormApproval && formApproval.EditableFormApproval.length > 0) {
+                                    var detailHTML = '';
+                                    detailHTML += '<div class="table-responsive">';
+                                    detailHTML += '<table class="table">';
+                                    detailHTML += '<thead>';
+                                    detailHTML += '<tr>';
+                                    detailHTML += '<th scope="col">No';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Approve Condition';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Notification Type';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Email Reminder';
+                                    detailHTML += '</th>';
+                                    detailHTML += '<th scope="col">Approvers';
+                                    detailHTML += '</th>';
+                                    detailHTML += '</tr>';
+                                    detailHTML += '</thead>';
+                                    detailHTML += '</thead>';
+                                    detailHTML += '<tbody>';
+
+                                    for (let i = 0; i < formApproval.EditableFormApproval.length; i++) {
+                                        var approvalLevel = formApproval.EditableFormApproval[i];
+
+                                        detailHTML += '<tr>';
+                                        detailHTML += '<th scope="row">' + (i + 1).toString() + '.</th>';
+                                        detailHTML += '<td>' + (approvalLevel.ApproveCondition === "single" ? "Single" : "All") + '</td>';
+                                        detailHTML += '<td>' + approvalLevel.NotificationType + '</td>';
+                                        detailHTML += '<td>' + approvalLevel.EmailReminder + " " + approvalLevel.ReminderType + '</td>';
+                                        detailHTML += '<td>';
+
+                                        if (approvalLevel.FormApprovers !== null && approvalLevel.FormApprovers.length > 0) {
+                                            for (let j = 0; j < approvalLevel.FormApprovers.length; j++) {
+                                                    detailHTML += '<span class="d-block">' + (j + 1).toString() + '. ' + approvalLevel.FormApprovers[j].ApproverName + '</span>';
+                                            }
+                                        }
+                                        else {
+                                            detailHTML += '<p>No Approvers</p>';
+                                        }
+                                            
+                                        detailHTML += '</td>'
+                                        detailHTML += '</tr>';
+                                    }
+                                        
+                                    detailHTML += '</tbody>';
+                                    detailHTML += '</table>';
+                                    detailHTML += '</div>';
+                                    
+                                    $("#editable_formapproval").html(detailHTML);
+                                } else {
+                                    $("#editable_formapproval").html('<div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No Approval</p></div>');
+                                }
+                            }
+                            else {
+                                $("#fixable_formapproval").html('<div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No Approval</p></div>');
+                                $("#editable_formapproval").html('<div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No Approval</p></div>');
+                            }
+
+                            if (data.masterFormDepartments.length > 0) {
+                                var navHTML = '';
+                                var tabContent = '';
+
+                                for (let i = 0; i < data.masterFormDepartments.length; i++) {
+                                    var detailHTML = '';
+
+                                    if (data.masterFormDepartments[i].masterFormCCBApprovalLevels !== null && data.masterFormDepartments[i].masterFormCCBApprovalLevels.length > 0) {
+                                        detailHTML += '<div class="table-responsive">';
+                                        detailHTML += '<table class="table">';
+                                        detailHTML += '<thead>';
+                                        detailHTML += '<tr>';
+                                        detailHTML += '<th scope="col">No';
+                                        detailHTML += '</th>';
+                                        detailHTML += '<th scope="col">Approve Condition';
+                                        detailHTML += '</th>';
+                                        detailHTML += '<th scope="col">Notification Type';
+                                        detailHTML += '</th>';
+                                        detailHTML += '<th scope="col">Email Reminder';
+                                        detailHTML += '</th>';
+                                        detailHTML += '<th scope="col">Approvers';
+                                        detailHTML += '</th>';
+                                        detailHTML += '</tr>';
+                                        detailHTML += '</thead>';
+                                        detailHTML += '</thead>';
+                                        detailHTML += '<tbody>';
+
+                                        for (let j = 0; j < data.masterFormDepartments[i].masterFormCCBApprovalLevels.length; j++) {
+                                            var approvalLevel = data.masterFormDepartments[i].masterFormCCBApprovalLevels[j];
+
+                                            detailHTML += '<tr>';
+                                            detailHTML += '<th scope="row">' + (j + 1).toString() + '.</th>';
+                                            detailHTML += '<td>' + (approvalLevel.approveCondition === "single" ? "Single" : "All") + '</td>';
+                                            detailHTML += '<td>' + approvalLevel.notificationType + '</td>';
+                                            detailHTML += '<td>' + approvalLevel.emailReminder + " " + approvalLevel.reminderType + '</td>';
+                                            detailHTML += '<td>';
+
+                                            if (approvalLevel.masterFormCCBApprovers !== null && approvalLevel.masterFormCCBApprovers.length > 0) {
+                                                for (let k = 0; k < approvalLevel.masterFormCCBApprovers.length; k++) {
+                                                    detailHTML += '<span class="d-block">' + (k + 1).toString() + '. ' + approvalLevel.masterFormCCBApprovers[k].approverName + '</span>';
+                                                }
+                                            }
+                                            else {
+                                                detailHTML += '<p>No Approvers</p>';
+                                            }
+                                            
+                                            detailHTML += '</td>'
+                                            detailHTML += '</tr>';
+                                        }
+                                        
+                                        detailHTML += '</tbody>';
+                                        detailHTML += '</table>';
+                                        detailHTML += '</div>';
+                                    }
+                                    else {
+                                        detailHTML += '<div class="alert alert-secondary d-flex justify-content-center align-items-center" role="alert" style="height: 150px;"><p>No Approval Levels</p></div>'
+                                    }
+
+                                    if (i === 0) {   
+                                        navHTML += '<li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#start-' + i.toString() + '">' + (i + 1).toString() + '. ' + data.masterFormDepartments[i].departmentName + '</a></li>';
+                                        tabContent += '<div class="tab-pane fade show active" id="start-' + i.toString() + '" role="tabpanel" aria-labelledby="start-' + i.toString() + '">' + detailHTML + '</div>';
+                                    }
+                                    else {
+                                        navHTML += '<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#start-' + i.toString() + '">' + (i + 1).toString() + '. ' + data.masterFormDepartments[i].departmentName + '</a></li>';
+                                        tabContent += '<div class="tab-pane fade" id="start-' + i.toString() + '" role="tabpanel" aria-labelledby="start-' + i.toString() + '">' + detailHTML + '</div>';
+                                    }
+                                }
+
+                                $("#departmentNav").html(navHTML);
+                                $("#myTabContent").html(tabContent);
+
+                                $("#hasContent").css("display", "");
+                            }
+                            else {
+                                $("#noContent").css("display", "");
+                            }
+
+                            $("#migratedFormDetail").css("display", "");
+                        }
+                        else {
+
+                        }
+                    }
+                });
+            }
+
+        }).on("select2:unselecting", function (e) {
+            $("#migratedFormDetail").css("display", "none");
+        });
+    });
+</script>

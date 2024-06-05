@@ -1,0 +1,121 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-WD_ERECORD_CORE-48B8C3D7-148E-468A-9A77-E25E8AF493E9</UserSecretsId>
+    <RootNamespace>WD_ERECORD_CORE</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="Pages\Form\**" />
+    <Content Remove="Migrations\**" />
+    <Content Remove="Pages\Form\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="Pages\Form\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="Pages\Form\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\EFormApproval\TakeAction.cshtml~RF23e716f.TMP" />
+    <None Remove="Pages\EmailGrouping\ahpx05ll.i3m~" />
+    <None Remove="Pages\EmailGrouping\bjzc33sx.40l~" />
+    <None Remove="Pages\eRecord\FormViewCreator.cshtml~RFb45cca.TMP" />
+    <None Remove="Pages\FormMigration\Index.cshtml~RF2446d022.TMP" />
+    <None Remove="Pages\Index.cshtml~RF10832356.TMP" />
+    <None Remove="Pages\Index.cshtml~RF628d4f2.TMP" />
+    <None Remove="Pages\Log\Activity.cshtml~RF11086375.TMP" />
+    <None Remove="Pages\MasterForm\CCBApprover.cshtml~RF97ae854.TMP" />
+    <None Remove="Pages\Shared\Components\CreateEditWizardHeader\Default.cshtml~RF137b804b.TMP" />
+    <None Remove="Pages\SubDepartmentCode\500sohyi.hmc~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.97.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Exchange.WebServices" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.61" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="GuidelineFiles\" />
+    <Folder Include="UserManualFiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.js" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.js.map" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.min.js" />
+    <None Include="wwwroot\formio\bootstrap4\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\offline-lib\ace.js" />
+    <None Include="wwwroot\lib\offline-lib\ckeditor.js" />
+    <None Include="wwwroot\lib\offline-lib\flatpickr.min.js" />
+    <None Include="wwwroot\lib\offline-lib\mode-handlebars.js" />
+    <None Include="wwwroot\lib\offline-lib\mode-html.js" />
+    <None Include="wwwroot\lib\offline-lib\mode-javascript.js" />
+    <None Include="wwwroot\lib\offline-lib\mode-json.js" />
+    <None Include="wwwroot\lib\offline-lib\theme-xcode.js" />
+    <None Include="wwwroot\lib\offline-lib\worker-html.js" />
+    <None Include="wwwroot\lib\offline-lib\worker-javascript.js" />
+    <None Include="wwwroot\lib\offline-lib\worker-json.js" />
+  </ItemGroup>
+
+</Project>

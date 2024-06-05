@@ -1,0 +1,117 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.EmailGrouping.DeleteModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Email Grouping Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "email-grouping" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Email Grouping Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Delete Email Grouping
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group row">
+                                <div class="col-8">
+                                    <label asp-for="EmailGroupList.GroupName" class="control-label"></label>
+                                    <input asp-for="EmailGroupList.GroupName" class="form-control" disabled />
+                                    <span asp-validation-for="EmailGroupList.GroupName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">User Name</th>
+                                            <th scope="col">Email Address</th>
+                                        </tr>
+                                    </thead>
+                                    @if (Model.EmailGroupList.EmailGroupUserLists != null)
+                                    {
+                                        if (Model.EmailGroupList.EmailGroupUserLists.Count() > 0)
+                                        {
+                                            <tbody>
+                                                @{
+                                                    int i = 1;
+                                                }
+
+                                                @foreach (var approver in Model.EmailGroupList.EmailGroupUserLists.ToList())
+                                                {
+                                                    <tr>
+                                                        <th scope="row">@i</th>
+                                                        <td>@approver.Username</td>
+                                                        <td>@approver.Email</td>
+                                                    </tr>
+
+                                                    i = i + 1;
+                                                }
+                                            </tbody>
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="3" style="text-align: center;padding: 150px; font-weight: 600;">No Email List Yet</td>
+                                                </tr>
+                                            </tbody>
+                                        }
+                                    }
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                    <form method="post">
+                        <div class="card-footer">
+                            <input type="hidden" asp-for="EmailGroupList.Id" />
+                            <a asp-page="Index" class="btn btn-light">Back</a>
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->

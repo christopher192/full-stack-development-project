@@ -1,0 +1,374 @@
+﻿@page "{CCBApprovalLevelId?}/{MasterFormId?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.CCBApproverModel
+
+@{
+    ViewData["Title"] = "CCB Approval Level";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create")
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "5" } })
+}
+else if (Model.FormMode == "Edit")
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "5" } })
+}
+else if (Model.FormMode == "EditOnly")
+{
+    @await Component.InvokeAsync("EditApprovalOnlyHeader", new { current = new string[] { "edit", "4" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form class="px-2" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FormMode" />
+            <input type="hidden" asp-for="CCBApprovalLevelId" />
+            <input type="hidden" asp-for="MasterFormCCBApprovalLevel.MasterFormDepartmentId" />
+            <input type="hidden" asp-for="MasterFormId" />
+
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label class="text-right">Department:</label>
+                    <select class="form-control select2" id="department"></select>
+                </div>
+                <div class="col-6 form-group">
+                    <label>Email Address:</label>
+                    <input type="hidden" asp-for="InputName" />
+                    <input type="hidden" asp-for="InputUserId" />
+                    <select class="form-control select2" asp-for="InputEmail"></select>
+                    <span asp-validation-for="InputEmail" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="d-flex justify-content-end">
+                    <input type="submit" asp-page-handler="AddUser" class="btn btn-primary" value="Add User" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-12 form-group">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">User Name</th>
+                                <th scope="col">Email Address</th>
+                                <th scope="col">Employee Id</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        @if (Model.MasterFormCCBApprovers.Count > 0)
+                        {
+                            int i = 0;
+                            foreach (var approver in Model.MasterFormCCBApprovers)
+                            {
+                                <tr>
+                                    <input type="hidden" asp-for="MasterFormCCBApprovers[i].Id" />
+                                    <input type="hidden" asp-for="MasterFormCCBApprovers[i].ApproverName" />
+                                    <input type="hidden" asp-for="MasterFormCCBApprovers[i].ApproverEmail" />
+                                    <input type="hidden" asp-for="MasterFormCCBApprovers[i].EmployeeId" />
+
+                                    <th scope="row">@(i + 1)</th>
+                                    <td>
+                                        @approver.ApproverName
+                                    </td>
+                                    <td>
+                                        @approver.ApproverEmail
+                                    </td>
+                                    <td>
+                                        @approver.EmployeeId
+                                    </td>
+                                    <td>
+                                        <input type="submit" asp-page-handler="DeleteUser" asp-route-CCBApproverId="@approver.Id" class="deleteUserButton btn btn-danger" value="Delete" />
+                                    </td>
+                                </tr>
+
+                                i = i + 1;
+                            }
+                        }
+                        else
+                        {
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;padding: 150px; font-weight: 600;">No Approver Yet</td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label>Email Reminder:</label>
+                    <div class="input-group">
+                        <input asp-for="MasterFormCCBApprovalLevel.ReminderType" type="hidden" />
+                        <input class="form-control" asp-for="MasterFormCCBApprovalLevel.EmailReminder" />
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="CurrentReminderType"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <button type="button" class="dropdown-item" onclick="SwitchReminderType(this)">
+                                    <span id="ChangeReminderType"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <span asp-validation-for="MasterFormCCBApprovalLevel.EmailReminder" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-6 form-group">
+                    <label>Approval Condition:</label>
+                    <select class="form-control" asp-for="MasterFormCCBApprovalLevel.ApproveCondition">
+                        <option value="single">Single</option>
+                        <option value="all">All</option>
+                    </select>
+                    <span asp-validation-for="MasterFormCCBApprovalLevel.ApproveCondition" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    <label>Notification Type: </label>
+                    <select class="form-control" asp-for="MasterFormCCBApprovalLevel.NotificationType">
+                        <option value="By Name/ Employee">By Name/ Employee</option>
+                        <option value="By Superior">By Superior</option>
+                    </select>
+                    <span asp-validation-for="MasterFormCCBApprovalLevel.NotificationType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group border-top mt-4">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <input class="backButton btn btn-primary" type="submit" asp-page-handler="Back" value="Back" />
+                    </div>
+                    <div>
+                        <input class="submitButton btn btn-primary" type="submit" asp-page-handler="Submit" value="Submit" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Wizard Form-->
+    </div>
+</div>
+<!--begin::Wizard Body-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function init() {
+        var currentReminderType = '@Model.MasterFormCCBApprovalLevel.ReminderType';
+
+        var setCurrentReminderType = document.getElementById('CurrentReminderType');
+        var setChangeReminderType = document.getElementById('ChangeReminderType');
+
+        setCurrentReminderType.innerHTML = currentReminderType;
+
+        if (currentReminderType === "Minutes") {
+            setChangeReminderType.innerHTML = "Hours";
+        }
+        else {
+            setChangeReminderType.innerHTML = "Minutes";
+        }
+    }
+
+    init();
+
+    function SwitchReminderType(children) {
+        var reminderId = document.getElementById("MasterFormCCBApprovalLevel_EmailReminder");
+        var reminderValue = document.getElementById("MasterFormCCBApprovalLevel_EmailReminder").value;
+        var reminderTypeId = document.getElementById("MasterFormCCBApprovalLevel_ReminderType");
+
+        var changeReminderType = children.childNodes[1].innerHTML;
+        var setCurrentReminderType = document.getElementById('CurrentReminderType');
+        var setChangeReminderType = document.getElementById('ChangeReminderType');
+
+        if (changeReminderType === "Hours") {
+            setChangeReminderType.innerHTML = "Minutes";
+            setCurrentReminderType.innerHTML = "Hours";
+            reminderId.value = reminderValue / 60;
+            reminderTypeId.value = "Hours";
+        } else {
+            setChangeReminderType.innerHTML = "Hours";
+            setCurrentReminderType.innerHTML = "Minutes";
+            reminderId.value = reminderValue * 60;
+            reminderTypeId.value = "Minutes";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#department').select2({
+            placeholder: "Select Department",
+            allowClear: true,
+            blurOnChange: true,
+            openOnEnter: false,
+            ajax: {
+                url: "@Url.Action("GetCostCenter", "api")",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        CostCenterName: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            },
+            formatResult: function (data) {
+                return "<div class='select2-user-result'>" + data.client + "</div>";
+            },
+            formatSelection: function (data) {
+                return data.client;
+            },
+            templateSelection: function (data, container) {
+                if (data.value === undefined) {
+                    return "Select Department";
+                }
+                return data.value;
+            }
+        });
+
+        $('#InputEmail').select2({
+            placeholder: "Select Email",
+            allowClear: true,
+            blurOnChange: true,
+            openOnEnter: false,
+            ajax: {
+                url: "@Url.Action("GetApproverEmail", "api")",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        Approver: params.term,
+                        ApproverRole: "CCB Approver"
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            },
+            formatResult: function (data) {
+                return "<div class='select2-user-result'>" + data.client + "</div>";
+            },
+            formatSelection: function (data) {
+                return data.client;
+            },
+            templateSelection: function (data, container) {
+                if (data.value === undefined) {
+                    return "Select Email";
+                }
+                return data.value;
+            }
+        });
+
+        $('#department').on('select2:select', function (e) {
+            var departmentData = e.params.data;
+            $('#InputName').val(null);
+            $('#InputUserId').val(null);
+            $("#InputEmail").val(null).trigger('change');
+            $('#InputEmail').prop("disabled", false).select2({
+                placeholder: "Select Email",
+                allowClear: true,
+                blurOnChange: true,
+                openOnEnter: false,
+                ajax: {
+                    url: "@Url.Action("GetApproverEmail", "api")",
+                    dataType: 'json',
+                    data: function (params) {
+                        return {
+                            CostCenterName: departmentData.value,
+                            Approver: params.term,
+                            ApproverRole: "CCB Approver"
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                error: function () {
+                    alert('Failed');
+                },
+                formatResult: function (data) {
+                    return "<div class='select2-user-result'>" + data.client + "</div>";
+                },
+                formatSelection: function (data) {
+                    return data.client;
+                },
+                templateSelection: function (data, container) {
+                    if (data.value === undefined) {
+                        return "Select Email";
+                    }
+                    return data.value;
+                }
+            });
+        }).on("select2:unselecting", function (e) {
+            $('#InputName').val(null);
+            $('#InputUserId').val(null);
+            $('#InputEmail').select2({
+                placeholder: "Select Email",
+                allowClear: true,
+                blurOnChange: true,
+                openOnEnter: false,
+                ajax: {
+                    url: "@Url.Action("GetApproverEmail", "api")",
+                    dataType: 'json',
+                    data: function (params) {
+                        return {
+                            Approver: params.term,
+                            ApproverRole: "CCB Approver"
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return { results: data };
+                    },
+                    cache: true
+                },
+                error: function () {
+                    alert('Failed');
+                },
+                formatResult: function (data) {
+                    return "<div class='select2-user-result'>" + data.client + "</div>";
+                },
+                formatSelection: function (data) {
+                    return data.client;
+                },
+                templateSelection: function (data, container) {
+                    if (data.value === undefined) {
+                        return "Select Email";
+                    }
+                    return data.value;
+                }
+            });
+        });
+
+        $('#InputEmail').on('select2:select', function (e) {
+            var ApprovalNameData = e.params.data;
+            $('#InputName').val(ApprovalNameData.text.split("-").map(item => item.trim())[1]);
+            $('#InputUserId').val(ApprovalNameData.text.split("-").map(item => item.trim())[2]);
+        }).on("select2:unselecting", function (e) {
+            $('#InputName').val(null);
+            $('#InputUserId').val(null);
+        });
+
+        // clear specific client side validation error
+        // so that we can proceed to backend
+        $(".deleteUserButton.btn.btn-danger, .backButton.btn.btn-primary, .submitButton.btn.btn-primary").on("click", function () {
+            $("#InputEmail").rules("remove", "required");
+        });
+    });
+</script>

@@ -1,0 +1,142 @@
+﻿@page "{ApprovalLevelId?}"
+@model WD_ERECORD_CORE.Pages.EFormApproval.ConfirmationPageModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Approval Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "eform-approval" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Approval Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Confirm Page-->
+                <div class="card card-custom card-stretch">
+                    <div class="card-body">
+                        <div class="form-group mb-8">
+                            <div class="alert alert-custom alert-default" role="alert">
+                                <div class="alert-icon">
+                                    <span class="svg-icon svg-icon-primary svg-icon-xl">
+                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Tools/Compass.svg-->
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24" />
+                                                <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                                <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+                                                <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+                                            </g>
+                                        </svg>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                </div>
+                                <div class="alert-text">No action is required for this approval level, action rejected! Kindly review below approval info.</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xl-6">
+                                <label asp-for="FormListApprovalLevel.FormList.FormName"></label>
+                                <input class="form-control" asp-for="FormListApprovalLevel.FormList.FormName" disabled />
+                            </div>
+                            <div class="col-xl-6">
+                                <label asp-for="FormListApprovalLevel.FormList.FormDescription"></label>
+                                <input class="form-control" asp-for="FormListApprovalLevel.FormList.FormDescription" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-xl-6">
+                                <label asp-for="FormListApprovalLevel.ApprovalStatus"></label>
+                                <input class="form-control text-capitalize" asp-for="FormListApprovalLevel.ApprovalStatus" disabled />
+                            </div>
+                            <div class="col-xl-6">
+                                <label asp-for="FormListApprovalLevel.ApproveCondition"></label>
+                                <input class="form-control text-capitalize" asp-for="FormListApprovalLevel.ApproveCondition" disabled />
+                            </div>
+                        </div>
+                        <hr class="mt-10 mb-10" />
+                        <h6>Approver`s Info</h6>
+                        <div class="table-responsive mt-5">
+                            <table class="table table-head-custom table-vertical-center">
+                                <thead>
+                                    <tr class="text-left">
+                                        <th class="pl-0" style="min-width: 120px">No</th>
+                                        <th style="min-width: 120px">Approver Name</th>
+                                        <th style="min-width: 120px">Approver Email</th>
+                                        <th style="min-width: 120px">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int Index = 1;
+                                        foreach (var Approver in Model.FormListApprovalLevel.FormListApprovers.OrderBy(x => x.Id).ToList())
+                                        {
+                                            if (Approver.ApproverStatus != "pending")
+                                            {
+                                                <tr>
+                                                    <td class="pl-0">
+                                                        <p class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@Index</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@Approver.ApproverName</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-dark-75 font-weight-bolder text-hover-primary font-size-lg">@Approver.ApproverEmail</p>
+                                                    </td>
+                                                    <td>
+                                                        @if (Approver.ApproverStatus == "approved")
+                                                        {
+                                                            <span class="label label-lg label-light-success label-inline">Approved</span>
+                                                        }
+                                                        else if (Approver.ApproverStatus == "rejected")
+                                                        {
+                                                            <span class="label label-lg label-light-danger label-inline">Rejected</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            Index += 1;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12">
+                                <a class="btn btn-secondary" asp-page="Index">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Confirm Page-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->

@@ -1,0 +1,97 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.Announcement.DetailsModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Announcement Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "announcement" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Announcement Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            View Announcement
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+
+                        <div class="pt-5 d-flex justify-content-center">
+                            <div>
+                                <div class="owl-carousel owl-theme">
+                                    <div class="item rounded" style='background:url(data:image/png;base64,@Model.AnnouncementList.Image); background-size: 600px 275px; background-repeat: no-repeat; height:270px; width:600px;'>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="d-flex justify-content-center align-items-end" style="height:270px; width:600px;">
+                                                    <div>
+                                                        <h1 class="text-center">@Model.AnnouncementList.Label1</h1>
+                                                        <div class="text-center mt-5">
+                                                            <h1>@Model.AnnouncementList.Label2</h1>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <a asp-page="Index" class="btn btn-light">Back</a>
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/plugins/custom/owlcarousel/owl.carousel.min.js"></script>
+
+<script type="text/javascript">
+    $('.owl-carousel').owlCarousel({
+        items: 1,
+        margin: 10,
+        singleItem: true,
+        lazyLoad: true
+    });
+</script>

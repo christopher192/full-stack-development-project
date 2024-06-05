@@ -1,0 +1,59 @@
+﻿@page "{MasterFormId?}"
+@model WD_ERECORD_CORE.Pages.MasterFormCCBApproval.MasterFormViewModel
+
+@{
+    Layout = "_FormViewLayout";
+    ViewData["Title"] = "Approval CCB Management";
+}
+
+<div class="row">
+    <div class="col-12 pt-5">
+        <h3>Master Form Name: @Model.MasterFormList.MasterFormName.ToString()</h3>
+        @if (Model.MasterFormList.MasterFormDescription != null)
+        {
+            <p class="pt-1">Description: @Model.MasterFormList.MasterFormDescription.ToString()</p>
+        }
+        else
+        {
+            <p class="pt-1">Description: <b>Not Available</b></p>
+        }
+
+        @if (Model.MasterFormList.GuidelineFile != null)
+        {
+            <p class="d-inline-block pr-3">User Manual:</p>
+            <a href="~/GuidelineFiles/@Model.MasterFormList.UniqueGuidelineFile" target="_blank"><img width="25" src="~/assets/media/svg/files/pdf.svg" /></a>
+        }
+        else
+        {
+            <p class="d-inline-block pr-3">User Manual: <b>Not Available</b></p>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-4">
+        <div id="formio"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.MasterFormList.MasterFormData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.createForm(document.getElementById('formio'), currentForm, {
+        renderMode: 'form'
+    }).then(function (form) {
+
+    });
+</script>

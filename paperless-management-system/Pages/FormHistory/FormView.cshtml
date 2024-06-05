@@ -1,0 +1,207 @@
+﻿@page "{FormHistoryId?}"
+@model WD_ERECORD_CORE.Pages.FormHistory.FormViewModel
+
+@{
+    Layout = "_FormViewLayout";
+    ViewData["Title"] = "Form History";
+}
+
+<div class="row">
+    <div class="col-12 pt-3">
+        <div class="float-right">
+            <button class="btn btn-primary" onclick="exportAsPDF()">Export as PDF</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-3">
+        <div id="formDetails">
+            <h4 class="pb-2">@Model.FormListHistory.FormName.ToString() (@Model.FormListHistory.RunningNumber.ToString())</h4>
+            <div id="formio"></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/html2pdf.js/html2pdf.bundle.min.js"></script>
+@*<script src="~/lib/html2canvas/html2canvas.min.js"></script>*@
+<script src="~/lib/momentjs/moment.min.js"></script>
+
+<script type="text/javascript">
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.FormListHistory.FormData)));
+    var currentSubmission = JSON.parse((@Json.Serialize(Model.FormListHistory.FormSubmittedData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.createForm(document.getElementById('formio'), currentForm, {
+        readOnly: true,
+        renderMode: 'form'
+    }).then(function (form) {
+        form.submission = {
+            data: currentSubmission
+        };
+    });;
+
+    function replaceOpenModel() {
+        var el = document.querySelectorAll('button.btn.btn-light.btn-md.open-modal-button[ref="openModal"]');
+
+        if (el.length > 0) {
+            for (var i = 0; i < el.length; i++) {
+                if (el[i].hasChildNodes()) {
+                    for (var j = 0; j < el[i].childNodes.length; j++) {
+                        var hasTable = false;
+
+                        if (el[i].childNodes[j].nodeName === "TABLE") {
+                            hasTable = true;
+                        }
+
+                        if (hasTable) {
+                            var el2 = document.createElement('div');
+                            el2.setAttribute('ref', 'openModal');
+
+                            var child = [];
+
+                            for (var b = 0; b < el[i].childNodes.length; b++) {
+                                child.push(el[i].childNodes[b].cloneNode(true));
+                            }
+
+                            for (var c = 0; c < child.length; c++) {
+                                el2.appendChild(child[c]);
+                            }
+
+                            el[i].parentNode.replaceChild(el2, el[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function replaceBackOpenModel() {
+        var el = document.querySelectorAll('div[ref="openModal"]');
+
+        if (el.length > 0) {
+            for (var i = 0; i < el.length; i++) {
+                if (el[i].hasChildNodes()) {
+                    for (var j = 0; j < el[i].childNodes.length; j++) {
+                        var hasTable = false;
+
+                        if (el[i].childNodes[j].nodeName === "TABLE") {
+                            hasTable = true;
+                        }
+
+                        if (hasTable) {
+                            var el2 = document.createElement('button');
+                            el2.setAttribute('ref', 'openModal');
+                            el2.setAttribute('class', 'btn btn-light btn-md open-modal-button')
+                            el2.setAttribute('lang', 'en');
+                            var child = [];
+
+                            for (var b = 0; b < el[i].childNodes.length; b++) {
+                                child.push(el[i].childNodes[b].cloneNode(true));
+                            }
+
+                            for (var c = 0; c < child.length; c++) {
+                                el2.appendChild(child[c]);
+                            }
+
+                            el[i].parentNode.replaceChild(el2, el[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // js function export html to pdf
+    function exportAsPDF() {
+        replaceOpenModel();
+
+        var formName = ('@Model.FormListHistory.FormName.ToString()' !== null ? '@Model.FormListHistory.FormName.ToString()' : "Undefined Form");
+        var formJSON = JSON.parse(@Json.Serialize(@Model.FormListHistory.JSON));
+        var formDetails = document.getElementById('formDetails');
+
+        var formApprovalObj = null;
+
+        var approvalDetails = "<h4>Approval Details</h4>";
+        approvalDetails += "<br />";
+
+        if (formJSON.FormListApproval !== null) {
+            formApprovalObj = formJSON;
+
+            if (formApprovalObj.FormListApprovalLevels !== null) {
+                if (formApprovalObj.FormListApprovalLevels.length > 1) {
+                    // sort approval level based on id
+                    formApprovalObj.FormListApprovalLevels.sort(function (a, b) {
+                        return a.Id - b.Id;
+                    });
+                }
+
+                for (var i = 0; i < formApprovalObj.FormListApprovalLevels.length; i++) {
+                    // filter based on approved and rejected status
+                    formApprovalObj.FormListApprovalLevels[i].FormListApprovers = formApprovalObj.FormListApprovalLevels[i].FormListApprovers.filter(function (obj) {
+                        return obj.ApproverStatus === "approved" || obj.ApproverStatus === "rejected";
+                    });
+
+                    if (formApprovalObj.FormListApprovalLevels[i].FormListApprovers.length > 1) {
+                        // sort based on approver date
+                        formApprovalObj.FormListApprovalLevels[i].FormListApprovers.sort((a, b) => new Date(a.ApporverDate) - new Date(b.ApporverDate));
+                    }
+                }
+            }
+        }
+
+        if (formApprovalObj === null) {
+            approvalDetails += "<div>No Approval Details.</div>";
+        }
+        else {
+            if (formApprovalObj.FormListApprovalLevels !== null) {
+                for (var i = 0; i < formApprovalObj.FormListApprovalLevels.length; i++) {
+                    approvalDetails += "<h5>" + "Approval Level " + (i + 1).toString() + "</h5>";
+                    approvalDetails += "<br />";
+                    approvalDetails += "<table class='table'>";
+                    approvalDetails += "<thead><tr><th>Approver Name</th><th>Approver Email</th><th>Status</th><th>Approval Date</th><th>Remark</th></thead></tr>";
+                    approvalDetails += "<tbody>";
+
+                    if (formApprovalObj.FormListApprovalLevels[i].FormListApprovers !== null) {
+                        for (var j = 0; j < formApprovalObj.FormListApprovalLevels[i].FormListApprovers.length; j++) {
+                            if (formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApproverStatus === "rejected" || formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApproverStatus === "approved") {
+                                approvalDetails += "<tr>";
+                                approvalDetails += "<td>" + formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApproverName + "</td>";
+                                approvalDetails += "<td>" + formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApproverEmail + "</td>";
+                                approvalDetails += "<td>" + formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApproverStatus + "</td>";
+                                approvalDetails += "<td>" + moment(formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].ApporverDate).format("DD MMM YY, h:mm:ss a") + "</td>";
+                                approvalDetails += "<td>" + (formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].Remark !== null ? formApprovalObj.FormListApprovalLevels[i].FormListApprovers[j].Remark : "No Remark") + "</td>";
+                                approvalDetails += "</tr>";
+                            }
+                        }
+                    }
+
+                    approvalDetails += "</tbody>";
+                    approvalDetails += "</table>";
+                }
+            }
+        }
+
+        var opt = {
+            margin: 1,
+            filename: formName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 }
+        };
+
+        html2pdf().set(opt).from(formDetails).toPdf().get('pdf').then(function (pdf) {
+            pdf.addPage();
+        }).from(approvalDetails).set(opt).toContainer().toCanvas().toPdf().save();
+    }
+</script>

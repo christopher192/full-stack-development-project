@@ -1,0 +1,135 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.ReviewSubmitModel
+
+@{
+    ViewData["Title"] = "Submit and Review";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "6" } })
+}
+else if (Model.FormMode == "Edit")
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "6" } })
+}
+else if (Model.FormMode == "EditOnly")
+{
+    @await Component.InvokeAsync("EditApprovalOnlyHeader", new { current = new string[] { "edit", "5" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form method="post" class="px-2">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="FormMode" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.MasterFormId" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.MasterFormName" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.MasterFormDescription" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.MasterFormCreatedBy" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.Owner" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.MasterFormData" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.GuidelineFile" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.UniqueGuidelineFile" />
+            <input type="hidden" asp-for="ReviewSubmitViewModel.ChangeLog" />
+
+            <div class="form-group">
+                <h3>Master Form Name: @Model.ReviewSubmitViewModel.MasterFormName.ToString()</h3>
+
+                @if (Model.ReviewSubmitViewModel.MasterFormDescription != null)
+                {
+                    <p class="pt-1">Description: @Model.ReviewSubmitViewModel.MasterFormDescription.ToString()</p>
+                }
+                else
+                {
+                    <p class="pt-1">Description: <b>Not Available</b></p>
+                }
+            </div>
+
+            <div class="form-group">
+                @if (Model.ReviewSubmitViewModel.GuidelineFile != null)
+                {
+                    <p class="d-inline-block pr-3">User Manual: </p>
+                    <a href="~/GuidelineFiles/@Model.ReviewSubmitViewModel.UniqueGuidelineFile" target="_blank"><img width="25" src="~/assets/media/svg/files/pdf.svg" /></a>
+                }
+                else
+                {
+                    <p class="d-inline-block pr-3">User Manual: <b>Not Available</b></p>
+                }
+            </div>
+            <hr />
+
+            <div class="form-group">
+                <label class="control-label" asp-for="ReviewSubmitViewModel.ChangeLog"></label>
+                <textarea class="form-control" asp-for="ReviewSubmitViewModel.ChangeLog" rows="5" disabled></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" asp-for="NewChangeLog"></label>
+                <input class="form-control" asp-for="NewChangeLog" />
+            </div>
+
+            <div class="form-group">
+                <h3>Preview Form</h3>
+                <br />
+                <div class="border-1">
+                    <div id="formio"></div>
+                </div>
+            </div>
+            
+            <div class="form-group border-top mt-4">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Previous" value="Previous" />
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Save" value="Save" />
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Submit" value="Submit" />
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        <!--end::Wizard Form-->
+    </div>
+</div>
+<!--begin::Wizard Body-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.ReviewSubmitViewModel.MasterFormData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.createForm(document.getElementById('formio'), currentForm, {
+        readOnly: true,
+        renderMode: 'form'
+    }).then(function (form) {
+
+    });;
+
+    function refreshAndClose() {
+        parent.document.location.href = "@Url.Action("Index", "MasterForm")";
+        window.opener.location.reload(true);
+        window.close();
+    }
+
+    var CloseWindowValue = '@TempData["Save"]';
+
+    if (CloseWindowValue !== null && CloseWindowValue !== '') {
+        refreshAndClose();
+    }
+</script>

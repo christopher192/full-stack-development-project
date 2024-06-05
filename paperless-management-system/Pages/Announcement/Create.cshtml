@@ -1,0 +1,96 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.Announcement.CreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Announcement Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "announcement" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Announcement Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Create Announcement
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form enctype="multipart/form-data" method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="AnnouncementListViewModel.Label1" class="control-label"></label>
+                                    <input asp-for="AnnouncementListViewModel.Label1" class="form-control" />
+                                    <span asp-validation-for="AnnouncementListViewModel.Label1" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="AnnouncementListViewModel.Label2" class="control-label"></label>
+                                    <input asp-for="AnnouncementListViewModel.Label2" class="form-control" />
+                                    <span asp-validation-for="AnnouncementListViewModel.Label2" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="AnnouncementListViewModel.UploadImage" class="control-label"></label>
+                                    <input type="file" asp-for="AnnouncementListViewModel.UploadImage" class="form-control" />
+                                    <span asp-validation-for="AnnouncementListViewModel.UploadImage" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="AnnouncementListViewModel.Status" class="control-label"></label>
+                                    <select asp-for="AnnouncementListViewModel.Status" class="form-control" asp-items="ViewBag.SelectionStatus">
+                                    </select>
+                                    <span asp-validation-for="AnnouncementListViewModel.Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="Index" class="btn btn-light">Back</a>
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,594 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.ChangeLog.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Change Log";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "change-log" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Change Log" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <div class="accordion accordion-light accordion-toggle-arrow" id="accordionChangeLog">
+                            <!-- v1.0.0.4 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title" data-toggle="collapse" data-target="#v1004">
+                                        eRecord SSD v1.0.0.4 - 28 October, 2022
+                                    </div>
+                                </div>
+                                <div id="v1004" class="collapse show" data-parent="#accordionChangeLog">
+                                    <div class="card-body mt-3">
+                                        <p>Updates & Improvements</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">CSS Design</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Shadow Box</code> to header.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">CSS/ JavaScript Library</span>
+                                                <ul>
+                                                    <li>
+                                                        Update <code>Form Library</code> from <code>v4.12.7</code> to <code>v4.14.9</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Database</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Encryption Decryption</code> to database <code>Password</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- v1.0.0.3 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title collapsed" data-toggle="collapse" data-target="#v1003">
+                                        eRecord SSD v1.0.0.3 - 10 October, 2022
+                                    </div>
+                                </div>
+                                <div id="v1003" class="collapse" data-parent="#accordionChangeLog">
+                                    <div class="card-body mt-3">
+                                        <p>New</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge">System Log</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Tranferring Form</code> history.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge">Dashboard</span>
+                                                <ul>
+                                                    <li>
+                                                        Add pending <code>Form Approval List</code> in to-do list.
+                                                    </li>
+                                                    <li>
+                                                        Add pending <code>CCB Approval List</code> in to-do list.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Updates & Improvements</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">My eRecord</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                    <li>
+                                                        Set <code>Departments</code> as adjustable state.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">eRecord Form Selection</span>
+                                                <ul>
+                                                    <li>
+                                                        All <code>Master Form</code> filter criteria based on adjustable <code>Departments</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">eRecord Approval</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">CCB Approval</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manager User</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Master Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">System Log</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Filter Function</code> as default for enter key instead of export table function.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Login</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Version Indicator</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Footer</span>
+                                                <ul>
+                                                    <li>
+                                                        Update <code>Version Indicator</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Fixes</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">eRecord Form Selection</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Cost Center</code> missing from title in eFormSelection page.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">CCB Approval</span>
+                                                <ul>
+                                                    <li>
+                                                        Remove unused <code>Input Text Box</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Master Form Description</code> did not save during first creation.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- v1.0.0.2 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title collapsed" data-toggle="collapse" data-target="#v1002">
+                                        eRecord SSD v1.0.0.2 - 30 September, 2022
+                                    </div>
+                                </div>
+                                <div id="v1002" class="collapse" data-parent="#accordionChangeLog">
+                                    <div class="card-body mt-3">
+                                        <p>Intergrate SIP Features</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Form Migration</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Master Form Migration</code> between <code>Testing Server</code> and <code>Production Server</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Email Grouping</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Email Grouping</code> for master form submission`s notification.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Updates & Improvements</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        Enable <code>Create, Edit and Delete Function</code> for Master Form.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <p>Fixes</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Dashboard</span>
+                                                <ul>
+                                                    <li>
+                                                        Did not show <code>Daily</code>, <code>Weekly</code>, <code>Monthly</code> and <code>Annually Form/ Master Form Submission</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- v1.0.0.1 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title collapsed" data-toggle="collapse" data-target="#v1001">
+                                        eRecord SSD v1.0.0.1 - 19/ 22 September, 2022
+                                    </div>
+                                </div>
+                                <div id="v1001" class="collapse" data-parent="#accordionChangeLog">
+                                    <div class="card-body mt-3">
+                                        <p>Updates & Improvements</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        Disable <code>Create, Edit and Delete Function</code> for Master Form.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Manage Numberic Scheme</span>
+                                                <ul>
+                                                    <li>
+                                                        Update <code>Filter Criteria</code> from <code>MATCH</code> to <code>LIKE</code> operator.
+                                                    </li>
+                                                    <li>
+                                                        Add <code>Validation</code> to <code>Department Code</code>, <code>Sub Department Code</code>, <code>Factory Code</code> and <code>Document Category Code</code> as well as their <code>Database Tables</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Fixes</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">My eRecord</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Blank Screen Error</code> during form submission due to <code>Large JSON Data</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Active Directory</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Roles Missing</code> for new employees.
+                                                    </li>
+                                                    <li>
+                                                        Filter <code>Specific Special Character</code> of new employees.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        L1 admin unable to gain <code>Access</code> to <code>L1 Admin Form History</code>.
+                                                    </li>
+                                                    <li>
+                                                        <code>Export Form Data Button</code> missing from <code>L1 Admin Form History</code> and <code>User Page Form History</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- v1.0.0.0 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title collapsed" data-toggle="collapse" data-target="#v1000">
+                                        eRecord SSD v1.0.0.0 - 19 September, 2022
+                                    </div>
+                                </div>
+                                <div id="v1000" class="collapse" data-parent="#accordionChangeLog">
+                                    <div class="card-body mt-3">
+                                        <p>Migration</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge">Framework</span>
+                                                <ul>
+                                                    <li>
+                                                        Update from <code>ASP.NET Core MVC</code> to <code>ASP.NET Core Razor Page</code>.
+                                                    </li>
+                                                    <li>
+                                                        Update from <code>.NET Core 5</code> to <code>.NET Core 6</code> for long term support.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge">Database</span>
+                                                <ul>
+                                                    <li>
+                                                        Update database from <code>Microsoft SQL Server</code> to <code>Oracle 19c</code>.
+                                                    </li>
+                                                    <li>
+                                                        Migrate data from <code>Microsoft SQL Server</code> to <code>Oracle 19c</code>.
+                                                    </li>
+                                                    <li>
+                                                        Database structure`s change for <code>Master Form Lists</code>, <code>Form Lists</code>, <code>Master Form Histories</code>, <code>Form Histories</code> and <code>Sub Depaprtments</code> for simplification or improvement.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Updates & Improvements</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        Simplify <code>Master Form</code> creation and editing.
+                                                    </li>
+                                                    <li>
+                                                        Master Form`s owner based on <code>Employee Id</code> instead of <code>Display Name</code>.
+                                                    </li>
+                                                    <li>
+                                                        Fixable state/ editable state for <code>Departments</code> and <code>Form Approval</code>.
+                                                    </li>
+                                                    <li>
+                                                        Add additional <code>Employee`s Email</code> for <code>CCB Approval</code> and <code>Form Approval</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">My eRecord</span>
+                                                <ul>
+                                                    <li>
+                                                        Form`s owner based on <code>Employee Id</code> instead of <code>Display Name</code>.
+                                                    </li>
+                                                    <li>
+                                                        Set <code>Form Approval</code> as fixable state.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Master Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        Master form`s owner based on <code>Employee Id</code> instead of <code>Display Name</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        Form`s owner based on <code>Employee Id</code> instead of <code>Display Name</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">eRecord Form Selection</span>
+                                                <ul>
+                                                    <li>
+                                                        All <code>Master Form</code> filter criteria based on fixable <code>Departments</code>.
+                                                    </li>
+                                                    <li>
+                                                        Add <code>Advanced Search</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Department Code</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Advanced Search</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Sub Department Code</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Advanced Search</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Factory Code</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Advanced Search</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Document Category Code</span>
+                                                <ul>
+                                                    <li>
+                                                        Add <code>Advanced Search</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Ownership</span>
+                                                <ul>
+                                                    <li>
+                                                        Set <code>Employee Name - Employee Id</code> for <code>Dropdown List</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                        <br />
+
+                                        <p>Fixes</p>
+                                        <ul>
+                                            <li>
+                                                <span class="badge badge-html">My eRecord</span>
+                                                <ul>
+                                                    <li>
+                                                        Fix <code>Blank Screen Error</code> during form submission due to <code>Large JSON Data</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">My Calender</span>
+                                                <ul>
+                                                    <li>
+                                                        Missing <code>Delete Button</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Manage Form</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Owner Input Text Box</code> unable to search employee name.
+                                                    </li>
+                                                    <li>
+                                                        Unable to search <code>Resigned Employee</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Department Code</span>
+                                                <ul>
+                                                    <li>
+                                                        <code>Blank/ NULL</code> registration.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <span class="badge badge-html">Form History</span>
+                                                <ul>
+                                                    <li>
+                                                        Missing <code>PDF Export</code> function.
+                                                    </li>
+                                                    <li>
+                                                        <code>Display Error</code> when fetching 5000 rows of data, error display in <code>Google Chrome</code>.
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script type="text/javascript">
+
+</script>

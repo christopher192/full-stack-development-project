@@ -1,0 +1,724 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.FormHistory.AdminPageModel
+@inject IAntiforgery antiforgery
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Form History";
+
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    #tblStocks {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #tblStocks td, #tblStocks th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #tblStocks tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #tblStocks tr:hover {
+        background-color: #ddd;
+    }
+
+    #tblStocks th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #294c67;
+        color: white;
+    }
+</style>
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "form-history" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Form History" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <form class="mb-15">
+                            <div class="row mb-6">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Form Name:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: eXX-X-XX-XX-XXXXX" data-col-index="0" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Status:</label>
+                                    <select class="form-control datatable-input" data-col-index="1">
+                                        <option value="">Select</option>
+                                        <option value="Approve">Approved</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Created Date:</label>
+                                    <div class="input-daterange input-group" id="createddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="2" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-8">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Modified Date:</label>
+                                    <div class="input-daterange input-group" id="modifieddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="3" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="3" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Export Action:</label>
+                                    <div>
+                                        <button class="btn btn-primary d-inline-block" id="export_table">Export Table</button>
+                                        <button class="btn btn-primary d-inline-block" id="export_formdata2">Export Form Data</button>                              
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                                        <span>
+                                            <i class="la la-search"></i>
+                                            <span>Search</span>
+                                        </span>
+                                    </button>&#160;&#160;
+                                    <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                        <span>
+                                            <i class="la la-close"></i>
+                                            <span>Reset</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!--begin: Datatable-->
+                        <table class="table table-bordered table-hover table-checkable" id="adminformhistory_datatable" style="margin-top: 13px !important">
+                            <thead>
+                                <tr>
+
+                                    <th>Form Name</th>
+                                    <th>Revision</th>
+                                    <th>Status</th>
+                                    <th>Created Date</th>
+                                    <th>Created By</th>
+                                    <th>Modified Date</th>
+                                    <th>Modified By</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<!-- Modal-->
+<div class="modal fade" id="TimeLineShowing" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Approval Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="MasterFormDetail"></div>
+                <div class="timeline timeline-2">
+                    <div class="timeline-bar"></div>
+                    <div id="TimeLineData"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+<script src="~/formio/formio.full.min.js"></script>
+<script src="~/lib/sheetjs/xlsx.full.min.js"></script>
+
+<script type="text/javascript">
+    var DataTableAdvancedSearch = function () {
+        var initDataTable = function () {
+            var table = $("#adminformhistory_datatable").DataTable({
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                paging: true,
+                responsive: true,
+                searching: { regex: true },
+                lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+                dom: `<'row'<'col-sm-12'tr>>
+			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: 'Export Excel',
+                        title: 'Form List History',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                page: 'current'
+                            }
+                        }
+                    }
+                ],
+                language: {
+                    'lengthMenu': 'Display _MENU_',
+                },
+                ajax: {
+                    url: "@Url.Action("LoadAdminFormHistoryTable", "DataTable")",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "formName" },
+                    { data: "formRevision" },
+                    { data: "formStatus" },
+                    { data: "createdDate" },
+                    { data: "createdBy" },
+                    { data: "modifiedDate" },
+                    { data: "modifiedBy" },
+                    { data: null, responsivePriority: -1 }
+                ],
+                columnDefs: [
+                     {
+                        targets: 1,
+                        render: function (data, type, full, meta) {
+                            return "Rev " + data;
+                        },
+                    },
+                    {
+                        targets: 2,
+                        render: function (data, type, full, meta) {
+                            var status = {
+                                'new': { 'title': 'New', 'class': ' label-light-primary' },
+                                'active': { 'title': 'Active', 'class': ' label-light-primary' },
+                                'pending': { 'title': 'Pending', 'class': ' label-light-warning' },
+                                'approved': { 'title': 'Approved', 'class': ' label-light-success' },
+                                'rejected': { 'title': 'Rejected', 'class': ' label-light-danger' }
+                            };
+
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+
+                            return '<a id="TriggerModel" href="javascript:;" class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</a>';
+                        },
+                    },
+                    {
+                        targets: 3,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "-";
+                        }
+                    },
+                    {
+                        targets: 4,
+                        render: function (data) {
+                            return data != null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 5,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 6,
+                        render: function (data) {
+                            return data != null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "FormHistory")/' + full.id + '/AdminPage"><i class="la la-eye"></i></a>'
+                                + '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("ExportExcel", "AuthorizedFunction")?Id=' + full.id + '"><i class="la la-download"></i></a>';
+                        }
+                    }
+                ]
+            });
+
+            var filter = function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                table.column($(this).data('col-index')).search(val ? val : '', false, false).draw();
+            };
+
+            var asdasd = function (value, index) {
+                var val = $.fn.dataTable.util.escapeRegex(value);
+                table.column(index).search(val ? val : '', false, true);
+            };
+
+            $('#kt_search').on('click', function (e) {
+                e.preventDefault();
+                var params = {};
+                $('.datatable-input').each(function () {
+                    var i = $(this).data('col-index');
+                    if (params[i]) {
+                        params[i] += '|' + $(this).val();
+                    }
+                    else {
+                        params[i] = $(this).val();
+                    }
+                });
+
+                $.each(params, function (i, val) {
+                    table.column(i).search(val ? val : '', false, false);
+                });
+                table.table().draw();
+            });
+
+            $('#kt_reset').on('click', function (e) {
+                e.preventDefault();
+                $('.datatable-input').each(function () {
+                    $(this).val('');
+                    table.column($(this).data('col-index')).search('', false, false);
+                });
+                table.table().draw();
+            });
+
+            $('#createddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                },
+            });
+
+            $('#modifieddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                },
+            });
+
+            $('#export_table').on('click', function (e) {
+                e.preventDefault();
+                table.button(0).trigger();
+            });
+
+            $('#export_formdata').on('click', function (e) {
+                e.preventDefault();
+
+                var idCollection = [];
+
+                table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                    var data = this.data();
+                    idCollection.push(data.id);
+                });
+
+                if (idCollection.length != 0) {
+                    var joinString = "?myparams=" + idCollection.join("&myparams=");
+
+                    window.location = "@Url.Action("ExportFormData", "FormListHistories")" + joinString;
+                }
+            });
+
+            function transformDataToLabel(formComponents, submittedData) {
+                var returnObjectLabel = {};
+                var objStartingNumber = 1;
+
+                Object.entries(submittedData).forEach(([key, value]) => {
+                    if (typeof submittedData[key] === 'object' && Array.isArray(submittedData[key])) {
+                        Object.entries(value).forEach(([cKey, cValue]) => {
+                            Object.entries(cValue).forEach(([ccKey, ccValue]) => {
+                                var findLabelValue = FormioUtils.getComponent(formComponents, (key + '.' + ccKey), true)?.['label'];
+
+                                if (findLabelValue !== undefined) {
+                                    try {
+                                        if (ccValue?.length > 2000) {
+                                            returnObjectLabel[objStartingNumber] = {};
+                                            returnObjectLabel[objStartingNumber][findLabelValue] = "";
+                                        }
+                                        else {
+                                            returnObjectLabel[objStartingNumber] = {};
+                                            returnObjectLabel[objStartingNumber][findLabelValue] = ccValue;
+                                        }
+                                    } catch (e) {
+                                        console.log("Source of error - Label: %s, Key: %s, Value: %s", findLabelValue, ccKey, ccValue);
+                                    }
+
+                                    objStartingNumber++;
+                                }
+                                else {
+                                    try {
+                                        if (ccValue?.length > 2000) {
+                                            returnObjectLabel[objStartingNumber] = {};
+                                            returnObjectLabel[objStartingNumber][(key + '.' + ccKey)] = "";
+                                        }
+                                        else {
+                                            returnObjectLabel[objStartingNumber] = {};
+                                            returnObjectLabel[objStartingNumber][(key + '.' + ccKey)] = ccValue;
+                                        }
+                                    } catch (e) {
+                                        console.log("Source of error - Label: %s, Key: %s, Value: %s", findLabelValue, ccKey, ccValue);
+                                    }
+
+                                    objStartingNumber++;
+                                }
+                            });
+                        });
+                    }
+                    else if (typeof submittedData[key] === 'object' && !Array.isArray(submittedData[key])) {
+                        
+                    }
+                    else {
+                        var findLabelValue = FormioUtils.getComponent(formComponents, key, true)?.['label'];
+
+                        if (findLabelValue !== undefined) {
+                            try {
+                                if (value?.length > 2000) {
+                                    returnObjectLabel[objStartingNumber] = {};
+                                    returnObjectLabel[objStartingNumber][findLabelValue] = "";
+                                }
+                                else {
+                                    returnObjectLabel[objStartingNumber] = {};
+                                    returnObjectLabel[objStartingNumber][findLabelValue] = value;
+                                }
+                            } catch (e) {
+                                console.log("Source of error - Label: %s, Key: %s, Value: %s", findLabelValue, key, value);
+                            }
+
+                            objStartingNumber++;
+                        } else {
+                            try {
+                                if (value?.length) {
+                                    returnObjectLabel[objStartingNumber] = {};
+                                    returnObjectLabel[objStartingNumber][key] = "";
+                                }
+                                else {
+                                    returnObjectLabel[objStartingNumber] = {};
+                                    returnObjectLabel[objStartingNumber][key] = value;
+                                }
+                            } catch (e) {
+                                console.log("Source of error - Label: %s, Key: %s, Value: %s", findLabelValue, key, value);
+                            }
+
+                            objStartingNumber++;
+                        }
+                    }
+                });
+
+                return returnObjectLabel;
+            }
+
+            $('#export_formdata2').on('click', function (e) {
+                e.preventDefault();
+                var historyData = table.rows().data().toArray();
+
+                if (historyData.length > 0) 
+                {
+                    var formHistoryIdList = [];
+                    
+                    for (let i = 0; i < historyData.length; i++) {
+                      formHistoryIdList.push(historyData[i].id);
+                    }
+
+                    $.ajax({ 
+                        type: 'POST',
+                        url: '@Url.Action("AdminPage", "FormHistory")', 
+                        data: JSON.stringify(formHistoryIdList),
+                        headers: { "RequestVerificationToken": "@token" },
+                        contentType: "application/json; charset=utf-8",
+                        beforeSend : function() {
+                            $("#export_formdata2").prop("disabled", true);
+                        },
+                        success: function (data) { 
+                            var respondData = data;
+                            var excelData = { };
+                            console.log(respondData);
+
+                            for (let i = 0; i < historyData.length; i++) {
+                                if (historyData[i].formName !== null && historyData[i].formRevision !== null) {
+                                    var excelSheetName = historyData[i].formName + " (Rev " + historyData[i].formRevision.split(".")[0] + ")";
+                                    var formDataSet = respondData.find(x => x.id === historyData[i].id);
+
+                                    if (!excelData.hasOwnProperty(excelSheetName)) {
+                                        if (formDataSet.formData !== null && formDataSet.formSubmittedData !== null) {
+                                            excelData[excelSheetName] = { };
+                                            excelData[excelSheetName]['formName'] = historyData[i].formName;
+                                            excelData[excelSheetName]['formRevision'] = historyData[i].formRevision;
+                                            excelData[excelSheetName]['numberRecord'] = 1;
+                                            excelData[excelSheetName]['columnName'] = ["No", "Form Name", "Revision", "Status", "Created Date", "Created By", "Modified Date", "Modified By"];
+                                            excelData[excelSheetName]['formData'] = [ ];
+
+                                            var dataAfterTransform = transformDataToLabel(JSON.parse(formDataSet.formData).components, JSON.parse(formDataSet.formSubmittedData));
+                                            var rowData = [excelData[excelSheetName].numberRecord, historyData[i].formName, historyData[i].formRevision, historyData[i].formStatus, historyData[i].createdDate, historyData[i].createdBy, historyData[i].modifiedDate, historyData[i].modifiedBy];
+
+                                            Object.entries(dataAfterTransform).forEach(([key, value]) => {
+                                                Object.entries(value).forEach(([ckey, cvalue]) => {
+                                                    excelData[excelSheetName]['columnName'].push(ckey);
+
+                                                    rowData.push(cvalue);
+                                                });
+                                            });
+
+                                            excelData[excelSheetName]['formData'].push(rowData);
+                                        }
+                                    }
+                                    else {
+                                        if (formDataSet.formData !== null && formDataSet.formSubmittedData !== null) {
+                                            var dataAfterTransform = transformDataToLabel(JSON.parse(formDataSet.formData).components, JSON.parse(formDataSet.formSubmittedData));
+                                            excelData[excelSheetName].numberRecord = excelData[excelSheetName].numberRecord + 1;
+                                            var rowData = [excelData[excelSheetName].numberRecord, historyData[i].formName, historyData[i].formRevision, historyData[i].formStatus, historyData[i].createdDate, historyData[i].createdBy, historyData[i].modifiedDate, historyData[i].modifiedBy];
+
+                                            Object.entries(dataAfterTransform).forEach(([key, value]) => {
+                                                Object.entries(value).forEach(([ckey, cvalue]) => {
+                                                    if (excelData[excelSheetName]['columnName'].indexOf(ckey) === -1) {
+                                                        excelData[excelSheetName]['columnName'].push(ckey);
+                                                    }
+
+                                                    rowData.push(cvalue);
+                                                });
+                                            });
+
+                                            excelData[excelSheetName]['formData'].push(rowData);
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (excelData && (Object.keys(excelData).length === 0) && (Object.getPrototypeOf(excelData) === Object.prototype)) {
+
+                            }
+                            else {
+                                console.log(excelData);
+                                var wb = XLSX.utils.book_new();
+
+                                wb.Props = {
+                                    Title: "Form List History",
+                                    Subject: "History",
+                                    Author: "eRecord",
+                                    CreatedDate: new Date()
+                                };
+
+                                Object.entries(excelData).forEach(([key, value]) => {
+                                    wb.SheetNames.push(key);
+
+                                    var ws_data3 = [];
+                                    ws_data3.push(value.columnName);
+
+                                    value.formData.forEach((element, i) => ws_data3.push(element));
+
+                                    var ws3 = XLSX.utils.aoa_to_sheet(ws_data3);
+                                    wb.Sheets[key] = ws3;
+                                });
+
+                                var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+                                function s2ab(s) {
+                                    var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+                                    var view = new Uint8Array(buf);  //create uint8array as viewer
+                                    for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+                                    return buf;
+                                }
+
+                                saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'Form List History.xlsx');
+                            }
+                        },
+                        complete : function(data) {
+                            $("#export_formdata2").prop("disabled", false);
+                        }
+                    });
+                }
+                else 
+                {
+                    Swal.fire("Empty History List!", "Unable to export form data to excel due to empty history list! Kindly try again.", "warning");
+                }
+            });
+
+            table.on('click', 'a#TriggerModel', function () {
+                var data = (typeof table.row(this).data() !== "undefined" ? table.row(this).data() : table.row($(this).parents('tr')).data());
+                var timeLineData = JSON.parse(data.json);
+
+                var approvalLevel = (timeLineData.FormListApprovalLevels !== null ? timeLineData.FormListApprovalLevels : null);
+                var approvers = [];
+
+                if (approvalLevel !== null) {
+                    for (var i = 0; i < approvalLevel.length; i++) {
+                        for (var j = 0; j < approvalLevel[i].FormListApprovers.length; j++) {
+                            if (approvalLevel[i].FormListApprovers[j].ApproverStatus === "approved" || approvalLevel[i].FormListApprovers[j].ApproverStatus === "rejected") {
+                                approvers.push(approvalLevel[i].FormListApprovers[j]);
+                            }
+                        }
+                    }
+
+                    approvers.sort((a, b) => new Date(a.ApporverDate) - new Date(b.ApporverDate));
+                }
+
+                var WriteMasterFormHTML = "";
+                var WriteTimeLineHTML = "";
+
+                $("#MasterFormDetail").empty();
+                $("#TimeLineData").empty();
+
+                WriteMasterFormHTML += "<p>Form Name: <b>" + timeLineData.FormName + "</b></p>";
+                WriteMasterFormHTML += "<p>Description: <b>" + (timeLineData.FormDescription !== null ? timeLineData.FormDescription : "Not Available") + "</b></p>";
+
+                if (timeLineData.FormStatus === "new") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-primary'>New</span></p>";
+                }
+                else if (timeLineData.FormStatus === "editing") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-info'>Editing</span></p>";
+                }
+                else if (timeLineData.FormStatus === "pending") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-warning'>Pending</span></p>";
+                }
+                else if (timeLineData.FormStatus === "approved") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-success'>Approved</span></p>";
+                }
+                else if (timeLineData.FormStatus === "rejected") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-danger'>Rejected</span></p>";
+                };
+
+                WriteTimeLineHTML += "<div class='timeline-item'>";
+                WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.CreatedBy + "</b> create form <b>" + timeLineData.FormName + "</b></span>";
+                WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.CreatedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                WriteTimeLineHTML += "</div>";
+                WriteTimeLineHTML += "</div>";
+
+                if (timeLineData.ModifiedBy !== null && timeLineData.ModifiedDate !== null) {
+                    WriteTimeLineHTML += "<div class='timeline-item'>";
+                    WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                    WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                    WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.ModifiedBy + "</b> modify form <b>" + timeLineData.FormName + "</b></span>";
+                    WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.ModifiedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                    WriteTimeLineHTML += "</div>";
+                    WriteTimeLineHTML += "</div>";
+                }
+
+                if (timeLineData.SubmittedBy !== null && timeLineData.SubmittedDate !== null) {
+                    WriteTimeLineHTML += "<div class='timeline-item'>";
+                    WriteTimeLineHTML += "<div class='timeline-badge bg-primary'></div>";
+                    WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                    WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.SubmittedBy + "</b> submit form <b>" + timeLineData.FormName + "</b></span>";
+                    WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.SubmittedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                    WriteTimeLineHTML += "</div>";
+                    WriteTimeLineHTML += "</div>";
+                }
+
+                if (approvers.length !== 0) {
+                    for (var i = 0; i < approvers.length; i++) {
+                        if (approvers[i].ApproverStatus === "approved") {
+                            WriteTimeLineHTML += "<div class='timeline-item'>";
+                            WriteTimeLineHTML += "<div class='timeline-badge bg-success'></div>";
+                            WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                            WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> approve form <b>" + timeLineData.FormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                            WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApporverDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                            WriteTimeLineHTML += "</div>";
+                            WriteTimeLineHTML += "</div>";
+                        }
+                        else if (approvers[i].ApproverStatus === "rejected") {
+                            WriteTimeLineHTML += "<div class='timeline-item'>";
+                            WriteTimeLineHTML += "<div class='timeline-badge bg-danger'></div>";
+                            WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                            WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> reject form <b>" + timeLineData.FormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                            WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApporverDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                            WriteTimeLineHTML += "</div>";
+                            WriteTimeLineHTML += "</div>";
+                        }
+                    }
+                }
+
+                $("#MasterFormDetail").append(WriteMasterFormHTML);
+                $("#TimeLineData").append(WriteTimeLineHTML);
+
+                $("#TimeLineShowing").modal('show');
+            });
+
+            $("form").keypress(function (e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    $('#kt_search').trigger("click");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+        };
+
+        return {
+            init: function () {
+                initDataTable();
+            },
+
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        DataTableAdvancedSearch.init();
+    });
+</script>

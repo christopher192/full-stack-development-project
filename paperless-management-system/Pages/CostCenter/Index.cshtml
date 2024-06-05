@@ -1,0 +1,250 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.CostCenter.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Cost Center Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "department" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Cost Center Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    @if (Model.ContainSystemAdmin) 
+                    {
+                        <div class="card-header">
+                            <div class="card-title">
+                            </div>
+                            <div class="card-toolbar">
+                                <!--begin::Button-->
+                                <a class="btn btn-primary font-weight-bolder mr-2" asp-page="./Create">
+                                    <span class="svg-icon svg-icon-md">
+                                        <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <rect x="0" y="0" width="24" height="24" />
+                                                <circle fill="#000000" cx="9" cy="15" r="6" />
+                                                <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+                                            </g>
+                                        </svg>
+                                        <!--end::Svg Icon-->
+                                    </span>Create Cost Center
+                                </a>
+                                <!--end::Button-->
+                            </div>
+                        </div>
+                    }
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <form class="mb-15">
+                            <div class="row mb-6">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Code:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: XXXXXX" data-col-index="0" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Name:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: QAXXXX" data-col-index="1" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Job Title:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: QAXXXX" data-col-index="2" />
+                                </div>
+                            </div>
+                            <div class="row mb-8">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Job Classification/ Track:</label>
+                                    <select class="form-control datatable-input" data-col-index="3">
+                                        <option value="">Select</option>
+                                        <option value="IDL">IDL</option>
+                                        <option value="DL">DL</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                                        <span>
+                                            <i class="la la-search"></i>
+                                            <span>Search</span>
+                                        </span>
+                                    </button>&#160;&#160;
+                                    <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                        <span>
+                                            <i class="la la-close"></i>
+                                            <span>Reset</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!--begin: Datatable-->
+                        <table class="table table-bordered table-hover table-checkable" id="costcenter_datatable" style="margin-top: 13px !important">
+                            <thead>
+                                <tr>
+
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Job Title</th>
+                                    <th>Job Classification/ Track</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+<script type="text/javascript">
+    var ContainSystemAdmin = Boolean("@Model.ContainSystemAdmin");
+
+    var FormAdvancedSearch = function () {
+        var initFormTable = function () {
+            var table = $("#costcenter_datatable").DataTable({
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                paging: true,
+                responsive: true,
+                searching: { regex: true },
+                lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+                dom: `<'row'<'col-sm-12'tr>>
+                                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+                language: {
+                    'lengthMenu': 'Display _MENU_',
+                },
+                ajax: {
+                    url: "@Url.Action("LoadCostCenterTable", "DataTable")",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "code" },
+                    { data: "name" },
+                    { data: "jobTitle" },
+                    { data: "jobClassificationTrack" },
+                    { data: null, responsivePriority: -1 }
+                ],
+                columnDefs: [
+                    {
+                        targets: 3,
+                        render: function (data) {
+                            return data !== null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            if (ContainSystemAdmin === true) {
+                                return '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "CostCenter")?id=' + full.encryptedId + '"><i class="la la-eye"></i></a>' +
+                                    '<a class="btn btn-sm btn-clean btn-icon" title="Edit form" href="@Url.Action("Edit", "CostCenter")?id=' + full.encryptedId + '"><i class="la la-edit"></i></a>'
+                                    + '<a class="btn btn-sm btn-clean btn-icon" title="Delete form" href="@Url.Action("Delete", "CostCenter")?id=' + full.encryptedId + '"><i class="la la-trash"></i></a>';
+                            }
+                            else {
+                                return '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "CostCenter")?id=' + full.encryptedId + '"><i class="la la-eye"></i></a>';
+                            }
+
+                        }
+                    }
+                ]
+            });
+
+            $('#kt_search').on('click', function (e) {
+                e.preventDefault();
+                var params = {};
+                $('.datatable-input').each(function () {
+                    var i = $(this).data('col-index');
+                    if (params[i]) {
+                        params[i] += '|' + $(this).val();
+                    }
+                    else {
+                        params[i] = $(this).val();
+                    }
+                });
+                $.each(params, function (i, val) {
+                    table.column(i).search(val ? val : '', false, false);
+                });
+                table.table().draw();
+            });
+
+            $('#kt_reset').on('click', function (e) {
+                e.preventDefault();
+                $('.datatable-input').each(function () {
+                    $(this).val('');
+                    table.column($(this).data('col-index')).search('', false, false);
+                });
+                table.column(8).search('', false, false);
+                table.table().draw();
+            });
+
+            $("form").keypress(function (e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    $('#kt_search').trigger("click");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+        };
+
+        return {
+            init: function () {
+                initFormTable();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        FormAdvancedSearch.init();
+    });
+</script>
+

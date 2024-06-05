@@ -1,0 +1,178 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.Announcement.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Announcement Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "announcement" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Announcement Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                        </div>
+                        <div class="card-toolbar">
+                            <!--begin::Button-->
+                            <a asp-page ="./Create" class="btn btn-primary font-weight-bolder mr-2">
+                                <span class="svg-icon svg-icon-md">
+                                    <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <circle fill="#000000" cx="9" cy="15" r="6" />
+                                            <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+                                        </g>
+                                    </svg>
+                                    <!--end::Svg Icon-->
+                                </span>Create Announcement
+                            </a>
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <!--begin: Datatable-->
+                        <table class="table table-bordered table-hover table-checkable" id="announcement_datatable" style="margin-top: 13px !important">
+                            <thead>
+                                <tr>
+
+                                    <th>Upload Date</th>
+                                    <th>Image</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+<script type="text/javascript">
+    var AnnouncementAdvancedSearch = function () {
+        var initAnnouncementTable = function () {
+            var table = $("#announcement_datatable").DataTable({
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                paging: true,
+                responsive: true,
+                searching: { regex: true },
+                lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+                ajax: {
+                    url: "@Url.Action("LoadAnnouncementTable", "DataTable")",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "uploadDate" },
+                    { data: "image" },
+                    { data: "status" },
+                    { data: null, responsivePriority: -1 }
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 1,
+                        orderable: false,
+                        render: function (data) {
+                            if (data !== null) {
+                                return "<img src='data:image/png;base64," + data + "'" + " width='150'" + ">";
+                            } else {
+                                return "<img src='images/no-image-available-icon-6.jpg' width='150' />";
+                            }
+                        }
+                    },
+                    {
+                        targets: 2,
+                        render: function (data, type, full, meta) {
+                            var status = {
+                                'Active': { 'title': 'Active', 'class': ' label-light-primary' },
+                                'Disactive': { 'title': 'Disactive', 'class': ' label-light-danger' }
+                            };
+
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+
+                            return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
+                        },
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "Announcement")/' + full.id + '"><i class="la la-eye"></i></a>' +
+                                '<a class="btn btn-sm btn-clean btn-icon" title="Edit form" href="@Url.Action("Edit", "Announcement")/' + full.id + '"><i class="la la-edit"></i></a>' +
+                                '<a class="btn btn-sm btn-clean btn-icon" title="Delete form" href="@Url.Action("Delete", "Announcement")/' + full.id + '"><i class="la la-trash"></i></a>';
+                        }
+                    }
+                ]
+            });
+        };
+
+        return {
+            init: function () {
+                initAnnouncementTable();
+            },
+
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        AnnouncementAdvancedSearch.init();
+    });
+</script>

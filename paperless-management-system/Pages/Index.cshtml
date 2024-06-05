@@ -1,0 +1,921 @@
+﻿@page
+@model IndexModel
+@inject IAntiforgery antiforgery
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
+
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<style>
+    .fc-button {
+        font-size: 12px !important;
+        padding: 0px 4px !important;
+        height: 27px !important;
+    }
+
+    .fc-center h2 {
+        font-size: 14px !important;
+    }
+
+    .centered {
+        position: absolute;
+        top: 70%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .centered2 {
+        position: absolute;
+        top: 85%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .spinner.spinner-modified {
+        right: 7.5%;
+        bottom: 7.5%;
+    }
+
+    .spinner.spinner-modified:before {
+        width: 4rem;
+        height: 4rem;
+    }
+</style>
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "dashboard" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Dashboard" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Dashboard-->
+                <!--begin::Row-->
+                <div class="row">
+                    <div class="col-xxl-4 col-xl-4 col-md-6 col-sm-6">
+                        <!--begin::Card-->
+                        <div class="card card-custom gutter-b card-stretch">
+                            <div class="card-body">
+                                <!--begin::User-->
+                                <div class="d-flex">
+                                    @if (!String.IsNullOrEmpty(Model.dvm.User.ProfilePicture))
+                                    {
+                                        <div class="symbol symbol-50 symbol-lg-150 mr-5">
+                                            <img src="data:image/png;base64,@Model.dvm.User.ProfilePicture" alt="Profile Picture">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="symbol symbol-150 symbol-xxl-150 mr-5 align-self-start align-self-xxl-center">
+                                            <div class="symbol-label" style="background-image: url('@Url.Content("~/assets/media/users/blank.png")');"></div>
+                                        </div>
+                                    }
+                                </div>
+                                <!--end::User-->
+                                <!--begin::Separator-->
+                                <div class="separator separator-solid my-7"></div>
+                                <!--end::Separator-->
+                                <!--begin::Contact-->
+                                <div class="pb-3">
+                                    <div class="mb-2">
+                                        <a href="#" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">@Model.dvm.User.DisplayName<i class="flaticon2-correct text-success icon-md ml-2"></i></a>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="font-weight-bold mr-2">Employee Id:</span>
+                                        <a href="#" class="text-muted text-hover-primary">@Model.dvm.User.EmployeeId</a>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="font-weight-bold mr-2">Supervisor ID:</span>
+                                        <span class="text-muted">@Model.dvm.User.ManagerId</span>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span class="font-weight-bold mr-2">Supervisor Name:</span>
+                                        <span class="text-muted">@Model.dvm.User.ManagerName</span>
+                                    </div>
+                                </div>
+                                <!--end::Contact-->
+                            </div>
+                        </div>
+                        <!--end::Card-->
+                    </div>
+                    <div class="col-xxl-8 col-xl-8 col-md-6 col-sm-6">
+                        <div class="card card-custom gutter-b card-stretch">
+                            <div class="card-body">
+
+                                @if (Model.dvm.Announcement.Count != 0)
+                                {
+                                    <div class="owl-carousel owl-theme">
+                                        @foreach (var ann in Model.dvm.Announcement)
+                                        {
+                                            if (ann.Image != null)
+                                            {
+                                                <div class="item">
+                                                    <div style="position: relative; text-align: center;">
+                                                        <h1 class="centered">@ann.Label1</h1>
+                                                        <h1 class="centered2">@ann.Label2</h1>
+                                                        <img src="data:image/png;base64,@ann.Image" style="height:275px;" />
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="item rounded">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                                                <div>
+                                                                    <h1 class="text-center">@ann.Label1</h1>
+                                                                    <div class="text-center mt-5">
+                                                                        <h1>@ann.Label2</h1>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                        <h1>No Annoucement</h1>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xx1-5 col-xl-5 col-md-12 col-sm-12">
+                        <div class="row">
+                            <div class="col-xxl-12 col-xl-12 col-md-12 col-sm-6">
+                                <!--begin::Card-->
+                                <div class="card card-custom card-stretch gutter-b">
+                                    <!--begin::Header-->
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <span class="card-icon">
+                                                <i class="flaticon-list-3 text-primary"></i>
+											</span>
+                                            <h3 class="card-label font-weight-bolder text-dark">
+                                                To-do List
+                                                <small id="currentPendingList">(eRecord)</small>
+                                            </h3>
+                                        </div>
+                                        <div class="card-toolbar">
+                                            <div class="dropdown dropdown-inline">
+                                                <button type="button" class="btn btn-light-primary btn-sm font-weight-bold dropdown-toggle" id="currentPendingListBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    eRecord
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                                                    <!--begin::Navigation-->
+                                                    <ul class="navi navi-hover">
+                                                        <li class="navi-item">
+                                                            <a href="javascript:;" class="navi-link" id="eRecordPendingListTrigger">
+																<span class="navi-text">eRecord</span>
+															</a>
+                                                        </li>
+                                                        <li class="navi-item">
+															<a href="javascript:;" class="navi-link" id="FormApprovalPendingListTrigger">
+																<span class="navi-text">Form Approval</span>
+															</a>
+                                                        </li>
+                                                        <li class="navi-item">
+                                                            <a href="javascript:;" class="navi-link" id="CCBApprovalPendingListTrigger">
+																<span class="navi-text">CCB Approval</span>
+															</a>
+                                                        </li>
+                                                    </ul>
+                                                    <!--end::Navigation-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Header-->
+                                    <!--begin::Body-->
+                                    <div class="card-body">
+                                        <div id="pendingLoading">
+                                            <div class="d-flex justify-content-center align-items-center" style="height: 270px;">
+                                                <div class="spinner spinner-success spinner-modified"></div>
+                                            </div>
+                                        </div>
+                                        <div class="scroll scroll-pull" id="pendingList" data-scroll="true" data-wheel-propagation="true" style="height: 270px; display: none;">
+                                        </div>
+                                    </div>
+                                    <!--end::Body-->
+                                </div>
+                                <!--end::Card-->
+                            </div>
+                            <div class="col-xxl-12 col-xl-12 col-md-12 col-sm-6">
+                                <!--begin::Card-->
+                                <div class="card card-custom card-stretch gutter-b">
+                                    <!--begin::Header-->
+                                    <div class="card-header h-auto">
+                                        <div class="card-title py-5">
+                                            <span class="card-icon">
+                                                <i class="flaticon2-calendar-5 text-primary"></i>
+                                            </span>
+                                            <h3 class="card-label font-weight-bolder text-dark">
+                                                My Calendar
+                                            </h3>
+                                        </div>
+                                        <div class="card-toolbar">
+                                        </div>
+                                    </div>
+                                    <!--end::Header-->
+                                    <div class="card-body">
+                                        <div id="kt_calendar"></div>
+                                    </div>
+                                </div>
+                                <!--end::Card-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xx1-7 col-xl-7 col-md-12 col-sm-12">
+                        <!--begin::Charts Widget 3-->
+                        <div class="card card-custom card-stretch gutter-b">
+                            <!--begin::Header-->
+                            <div class="card-header h-auto">
+                                <div class="card-title py-5">
+                                    <span class="card-icon">
+                                        <i class="flaticon-graphic-2 text-primary"></i>
+                                    </span>
+                                    <h3 class="card-label font-weight-bolder text-dark">
+                                        Dashboard Report
+                                    </h3>
+                                </div>
+                                <div class="card-toolbar">
+                                </div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Body-->
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="float-right">
+                                            <ul class="nav nav-pills nav-pills-sm nav-dark-75">
+                                                <li class="nav-item">
+                                                    <a class="nav-link py-2 px-4" data-toggle="tab" href="#tab_pane_11_3">Month</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link py-2 px-4" data-toggle="tab" href="#tab_pane_11_2">Week</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link py-2 px-4 active" data-toggle="tab" href="#tab_pane_11_1">Day</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="tab-content" id="tab_pane_11">
+                                            <!--begin::Tap pane-->
+                                            <div class="tab-pane fade show active" id="tab_pane_11_1" role="tabpanel" aria-labelledby="tab_pane_11_1">
+                                                <div id="dailyLoading">
+                                                    <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                                        <div class="spinner spinner-success spinner-modified"></div>
+                                                    </div>
+                                                </div>
+                                                <div id="dailySubmissionData" style="display: none;">
+                                                    <div id="DailyAnnouncementSubmission"></div>
+                                                </div>
+                                            </div>
+                                            <!--end::Tap pane-->
+                                            <!--begin::Tap pane-->
+                                            <div class="tab-pane fade" id="tab_pane_11_2" role="tabpanel" aria-labelledby="tab_pane_11_2">
+                                                <div id="weeklyLoading">
+                                                    <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                                        <div class="spinner spinner-success spinner-modified"></div>
+                                                    </div>
+                                                </div>
+                                                <div id="weeklySubmissionData" style="display: none;">
+                                                    <div id="WeeklyAnnouncementSubmission"></div>
+                                                </div>
+                                            </div>
+                                            <!--end::Tap pane-->
+                                            <!--begin::Tap pane-->
+                                            <div class="tab-pane fade" id="tab_pane_11_3" role="tabpanel" aria-labelledby="tab_pane_11_3">
+                                                <div id="monthlyLoading">
+                                                    <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                                        <div class="spinner spinner-success spinner-modified"></div>
+                                                    </div>
+                                                </div>
+                                                <div id="monthlySubmissionData" style="display: none;">
+                                                    <div id="MonthlyAnnouncementSubmission"></div>
+                                                </div>
+                                            </div>
+                                            <!--end::Tap pane-->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 pt-15">
+                                        <div id="annualLoading">
+                                            <div class="d-flex justify-content-center align-items-center" style="height:270px;">
+                                                <div class="spinner spinner-success spinner-modified"></div>
+                                            </div>
+                                        </div>
+
+                                        <div id="annualSubmissionData" style="display: none;">
+                                            <div id="AnnualAnnouncementSubmission"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                        <!--end::Charts Widget 3-->
+                    </div>
+                </div>
+                <!--end::Row-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/plugins/custom/owlcarousel/owl.carousel.min.js"></script>
+
+<script type="text/javascript">
+    var ApexChart = function () {
+        var _initAnnualSubmission = function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index", "")?handler=AnnualSubmission',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $("#annualLoading").css("display", "none");
+                    $("#annualSubmissionData").css("display", "");
+
+                    var element = document.getElementById("AnnualAnnouncementSubmission");
+
+                    if (!element) {
+                        return;
+                    }
+
+                    var annualSubmissionData = data;
+
+                    if (data.length > 0) {
+                        var options = {
+                            series: annualSubmissionData,
+                            chart: {
+                                type: 'line',
+                                height: 350,
+                                toolbar: {
+                                    show: false
+                                }
+                            },
+                            plotOptions: {
+
+                            },
+                            title: {
+                                text: 'Annual Submission',
+                                align: 'left'
+                            },
+                            legend: {
+                                show: false
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            xaxis: {
+                                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                            },
+                            yaxis: {
+                                labels: {
+                                    formatter: function (value) {
+                                        return Math.floor(value)
+                                    }
+                                },
+                                min: 0
+                            }
+                        };
+
+                        var chart = new ApexCharts(element, options);
+                        chart.render();                    
+                    }
+                    else
+                    {
+                        var html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Annual Submission</h1></div>';
+                        $("#AnnualAnnouncementSubmission").html(html);
+                    }
+                }
+            });
+        }
+
+        var _initDailySubmission = function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index", "")?handler=DailySubmission',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $("#dailyLoading").css("display", "none");
+                    $("#dailySubmissionData").css("display", "");
+
+                    var element = document.getElementById("DailyAnnouncementSubmission");
+
+                    if (!element) {
+                        return;
+                    }
+
+                    var dailySubmissionData = data;
+
+                    if (dailySubmissionData.length > 0) {
+                        var labels = [];
+                        var series = [];
+
+                        for (var i = 0; i < dailySubmissionData.length; i++) {
+                            labels.push(dailySubmissionData[i].Labels);
+                            series.push(dailySubmissionData[i].Series);
+                        }
+
+                        var options = {
+                            series: series,
+                            chart: {
+                                width: '100%',
+                                height: 400,
+                                type: 'pie',
+                            },
+                            labels: labels,
+                            title: {
+                                text: 'Today Submission',
+                                align: 'left',
+                            },
+                            legend: {
+                                show: false
+                            },
+                            responsive: [{
+                                breakpoint: 480,
+                                options: {
+                                    chart: {
+                                        width: 200
+                                    },
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }],
+                            dataLabels: {
+                                formatter(val, opts) {
+                                    const name = opts.w.globals.labels[opts.seriesIndex]
+                                    return [name, opts.w.config.series[opts.seriesIndex]]
+                                }
+                            },
+                        };
+
+                        var chart = new ApexCharts(element, options);
+                        chart.render();
+                    }
+                    else {
+                        var html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Daily Submission</h1></div>';
+                        $("#DailyAnnouncementSubmission").html(html);
+                    }
+                }
+            });
+        }
+
+        var _initWeeklySubmission = function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index", "")?handler=WeeklySubmission',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $("#weeklyLoading").css("display", "none");
+                    $("#weeklySubmissionData").css("display", "");
+
+                    var element = document.getElementById("WeeklyAnnouncementSubmission");
+
+                    if (!element) {
+                        return;
+                    }
+
+                    var weeklySubmissionData = data;
+                    var labels = [];
+                    var series = [];
+
+                    if (weeklySubmissionData.length > 0) {
+                        for (var i = 0; i < weeklySubmissionData.length; i++) {
+                            labels.push(weeklySubmissionData[i].Labels);
+                            series.push(weeklySubmissionData[i].Series);
+                        }
+
+                        var options = {
+                            series: series,
+                            chart: {
+                                width: '100%',
+                                height: 400,
+                                type: 'pie',
+                            },
+                            labels: labels,
+                            title: {
+                                text: 'Weekly Submission',
+                                align: 'left',
+                            },
+                            legend: {
+                                show: false
+                            },
+                            responsive: [{
+                                breakpoint: 480,
+                                options: {
+                                    chart: {
+                                        width: 200
+                                    },
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }],
+                            dataLabels: {
+                                formatter(val, opts) {
+                                    const name = opts.w.globals.labels[opts.seriesIndex]
+                                    return [name, opts.w.config.series[opts.seriesIndex]]
+                                }
+                            },
+                        };
+
+                        var chart = new ApexCharts(element, options);
+                        chart.render();                                        
+                    } 
+                    else {
+                        var html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Weekly Submission</h1></div>';
+                        $("#WeeklyAnnouncementSubmission").html(html);
+                    }
+                }
+            });
+        }
+
+        var _initMonthlySubmission = function () {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index", "")?handler=MonthlySubmission',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $("#monthlyLoading").css("display", "none");
+                    $("#monthlySubmissionData").css("display", "");
+
+                    var element = document.getElementById("MonthlyAnnouncementSubmission");
+
+                    if (!element) {
+                        return;
+                    }
+
+                    var monthlySubmissionData = data;
+                    var labels = [];
+                    var series = [];
+
+                    if (monthlySubmissionData.length > 0) {
+                        for (var i = 0; i < monthlySubmissionData.length; i++) {
+                            labels.push(monthlySubmissionData[i].Labels);
+                            series.push(monthlySubmissionData[i].Series);
+                        }
+
+                        var options = {
+                            series: series,
+                            chart: {
+                                width: '100%',
+                                height: 400,
+                                type: 'pie',
+                            },
+                            labels: labels,
+                            title: {
+                                text: 'Monthly Submission',
+                                align: 'left',
+                            },
+                            legend: {
+                                show: false
+                            },
+                            responsive: [{
+                                breakpoint: 480,
+                                options: {
+                                    chart: {
+                                        width: 200
+                                    },
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }],
+                            dataLabels: {
+                                formatter(val, opts) {
+                                    const name = opts.w.globals.labels[opts.seriesIndex]
+                                    return [name, opts.w.config.series[opts.seriesIndex]]
+                                }
+                            },
+                        };
+
+                        var chart = new ApexCharts(element, options);
+                        chart.render();
+                    } 
+                    else {
+                        var html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Monthly Submission</h1></div>';
+                        $("#MonthlyAnnouncementSubmission").html(html);
+                    }
+                }
+            });
+        }
+
+        return {
+            init: function () {
+                _initDailySubmission();
+                _initWeeklySubmission();
+                _initMonthlySubmission();
+                _initAnnualSubmission();
+            }
+        }
+    }();
+
+    var Dashboard = function () {
+        var calendarData = '@Json.Serialize(ViewData["CalendarData"])';
+        var parseCalendarData = JSON.parse(calendarData);
+
+        var Calendar = function () {
+            var todayDate = moment().startOf('day');
+            var YM = todayDate.format('YYYY-MM');
+            var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+            var TODAY = todayDate.format('YYYY-MM-DD');
+            var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
+
+            var calendarEl = document.getElementById('kt_calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'list'],
+                themeSystem: 'bootstrap',
+
+                isRTL: KTUtil.isRTL(),
+
+                header: {
+                    left: 'prev,next today btn-sm',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+
+                height: 300,
+                contentHeight: 380,
+                aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
+
+                nowIndicator: true,
+                now: TODAY + 'T09:25:00', // just for demo
+
+                views: {
+                    dayGridMonth: { buttonText: 'month' },
+                    timeGridWeek: { buttonText: 'week' },
+                    timeGridDay: { buttonText: 'day' }
+                },
+
+                defaultView: 'dayGridMonth',
+                defaultDate: TODAY,
+
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                navLinks: true,
+                events: parseCalendarData,
+
+                eventRender: function (info) {
+                    var element = $(info.el);
+
+                    if (info.event.extendedProps && info.event.extendedProps.description) {
+                        if (element.hasClass('fc-day-grid-event')) {
+                            element.data('content', info.event.extendedProps.description);
+                            element.data('placement', 'top');
+                            KTApp.initPopover(element);
+                        } else if (element.hasClass('fc-time-grid-event')) {
+                            element.find('.fc-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                        } else if (element.find('.fc-list-item-title').lenght !== 0) {
+                            element.find('.fc-list-item-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
+                        }
+                    }
+                }
+            });
+
+            calendar.render();
+        }
+
+        var PendingList = function () {
+            // initial
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Index", "")?handler=AcquireFormList',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $("#pendingLoading").css("display", "none");
+                    $("#pendingList").css("display", "");
+                    
+                    var html = '';
+
+                    if (data.length > 0)
+                    {
+                        for (let i = 0; i < data.length; i++) {
+                            html += '<div class="d-flex align-items-center mb-6">';
+                            html += '<div class="d-flex flex-column flex-grow-1 py-2">';
+                            html += '<a href="@Url.Action("Index", "eRecord")/' + data[i].id + '" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">' + data[i].formName + '</a>';
+                            html += '</div>';
+
+                            if (data[i].formStatus === "pending") {
+                                html += '<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>';
+                            }
+                            else if (data[i].formStatus === "editing") {
+                                html += '<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Editing</span>';
+                            }
+                            else if (data[i].formStatus === "new") {
+                                html += '<span class="label label-lg label-light-primary label-inline font-weight-bold py-4">New</span>';
+                            }
+                            
+                            html += '</div>';
+                        }
+
+                        $("#pendingList").html(html);
+                    }
+                    else
+                    {
+                        html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Pending List</h1></div>';
+                        $("#pendingList").html(html);
+                    }
+                }
+            });
+            
+            $("#eRecordPendingListTrigger").click(function () {
+                $("#currentPendingList").text("(eRecord)");
+                $("#currentPendingListBtn").text("eRecord");
+                $("#pendingLoading").css("display", "");
+                $("#pendingList").css("display", "none");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Index", "")?handler=AcquireFormList',
+                    headers: { "RequestVerificationToken": "@token" },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#pendingLoading").css("display", "none");
+                        $("#pendingList").css("display", "");
+
+                        var html = '';
+
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                html += '<div class="d-flex align-items-center mb-6">';
+                                html += '<div class="d-flex flex-column flex-grow-1 py-2">';
+                                html += '<a href="@Url.Action("Index", "eRecord")/' + data[i].id + '" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">' + data[i].formName + '</a>';
+                                html += '</div>';
+
+                                if (data[i].formStatus === "pending") {
+                                    html += '<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>';
+                                }
+                                else if (data[i].formStatus === "editing") {
+                                    html += '<span class="label label-lg label-light-info label-inline font-weight-bold py-4">Editing</span>';
+                                }
+                                else if (data[i].formStatus === "new") {
+                                    html += '<span class="label label-lg label-light-primary label-inline font-weight-bold py-4">New</span>';
+                                }
+                            
+                                html += '</div>';
+                            }
+
+                            $("#pendingList").html(html);
+                        }
+                        else {
+                            html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Pending List</h1></div>';
+                            $("#pendingList").html(html);
+                        }
+                    }
+                });
+            });
+
+            $("#FormApprovalPendingListTrigger").click(function () {
+                $("#currentPendingList").text("(Form Approval)");
+                $("#currentPendingListBtn").text("F. Approval");
+                $("#pendingLoading").css("display", "");
+                $("#pendingList").css("display", "none");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Index", "")?handler=AcquireFormApprovalList',
+                    headers: { "RequestVerificationToken": "@token" },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#pendingLoading").css("display", "none");
+                        $("#pendingList").css("display", "");
+
+                        var html = '';
+
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                html += '<div class="d-flex align-items-center mb-6">';
+                                html += '<div class="d-flex flex-column flex-grow-1 py-2">';
+                                html += '<a href="@Url.Action("Index", "EFormApproval")/' + data[i].id + '" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">' + data[i].formName + '</a>';
+                                html += '</div>';
+
+                                if (data[i].formStatus === "pending") {
+                                    html += '<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>';
+                                }
+
+                                html += '</div>';
+                            }
+
+                            $("#pendingList").html(html);
+                        }
+                        else {
+                            html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Pending List</h1></div>';
+                            $("#pendingList").html(html);
+                        }
+                    }
+                });
+            });
+
+            $("#CCBApprovalPendingListTrigger").click(function () {
+                $("#currentPendingList").text("(CCB Approval)");
+                $("#currentPendingListBtn").text("C. Approval");
+                $("#pendingLoading").css("display", "");
+                $("#pendingList").css("display", "none");
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Index", "")?handler=AcquireMasterFormApprovalList',
+                    headers: { "RequestVerificationToken": "@token" },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#pendingLoading").css("display", "none");
+                        $("#pendingList").css("display", "");
+
+                        var html = '';
+
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                html += '<div class="d-flex align-items-center mb-6">';
+                                html += '<div class="d-flex flex-column flex-grow-1 py-2">';
+                                html += '<a href="@Url.Action("Index", "MasterFormCCBApproval")/' + data[i].id + '" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">' + data[i].masterFormName + '</a>';
+                                html += '</div>';
+
+                                if (data[i].masterFormStatus === "pending") {
+                                    html += '<span class="label label-lg label-light-warning label-inline font-weight-bold py-4">Pending</span>';
+                                }
+
+                                html += '</div>';
+                            }
+
+                            $("#pendingList").html(html);
+                        }
+                        else {
+                            html = '<div class="d-flex justify-content-center align-items-center" style="height:270px;"><h1>No Pending List</h1></div>';
+                            $("#pendingList").html(html);
+                        }
+                    }
+                });
+            });
+        }
+
+        return {
+            //main function to initiate the module
+            init: function () {
+                Calendar();
+                PendingList();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        Dashboard.init();
+        ApexChart.init();
+    });
+
+    $('.owl-carousel').owlCarousel({
+        items: 1,
+        margin: 10,
+        loop: true,
+        singleItem: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: false,
+    });
+</script>
+
+

@@ -1,0 +1,104 @@
+﻿@model string
+
+<div id="kt_header" class="header header-fixed">
+    <!--begin::Container-->
+    <div class="container-fluid d-flex align-items-stretch justify-content-between">
+        <!--begin::Header Menu Wrapper-->
+        <div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
+            <!--begin::Header Menu-->
+            <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
+                <!--begin::Header Nav-->
+                <ul class="menu-nav">
+                    <li class="menu-item menu-item-open menu-item-here menu-item-submenu menu-item-rel menu-item-open menu-item-here menu-item-active" data-menu-toggle="click" aria-haspopup="true">
+                        <h4>
+                            @Model
+                        </h4>
+                    </li>
+                </ul>
+                <!--end::Header Nav-->
+            </div>
+            <!--end::Header Menu-->
+        </div>
+        <!--end::Header Menu Wrapper-->
+        <!--begin::Topbar-->
+        <div class="topbar">
+            <div class="topbar-item">
+                <a class="btn btn-sm btn-light font-weight-bold mr-2">
+                    <span class="text-muted font-size-base font-weight-bold mr-2">Today</span>
+                    <span class="text-primary font-size-base font-weight-bolder">
+                        <span id="MyClockDisplay" class="clock" onload="showTime()"></span>
+                    </span>
+                </a>
+            </div>
+            <!--begin::User-->
+            <div class="topbar-item">
+                @{
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2" id="kt_quick_user_toggle">
+                            <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
+                            <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">@UserManager.FindByNameAsync(User.Identity.Name).Result.DisplayName</span>
+                            <span class="symbol symbol-lg-35 symbol-25 symbol-light-success">
+                                <span class="symbol-label font-size-h5 font-weight-bold">@UserManager.FindByNameAsync(User.Identity.Name).Result.DisplayName.Substring(0, 1)</span>
+                            </span>
+                        </div>
+
+                        @*                        <a class="btn btn-primary btn-sm ml-2" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">Log Out</a>*@
+                    }
+                }
+            </div>
+            <!--end::User-->
+
+        </div>
+        <!--end::Topbar-->
+    </div>
+    <!--end::Container-->
+</div>
+
+<script type="text/javascript">
+    function showTime() {
+        var month = new Array();
+        month[0] = "Jan";
+        month[1] = "Feb";
+        month[2] = "Mar";
+        month[3] = "Apr";
+        month[4] = "May";
+        month[5] = "Jun";
+        month[6] = "Jul";
+        month[7] = "Aug";
+        month[8] = "Sep";
+        month[9] = "Oct";
+        month[10] = "Nov";
+        month[11] = "Dec";
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = month[date.getMonth()];
+        var year = date.getFullYear();
+        var h = date.getHours(); // 0 - 23
+        var m = date.getMinutes(); // 0 - 59
+        var s = date.getSeconds(); // 0 - 59
+        var session = "AM";
+
+        if (h == 0) {
+            h = 12;
+        }
+
+        if (h > 12) {
+            h = h - 12;
+            session = "PM";
+        }
+
+        h = (h < 10) ? "0" + h : h;
+        m = (m < 10) ? "0" + m : m;
+        s = (s < 10) ? "0" + s : s;
+
+        var time = day + "-" + month + "-" + year + " " + h + ":" + m + ":" + s + " " + session;
+        document.getElementById("MyClockDisplay").innerText = time;
+        document.getElementById("MyClockDisplay").textContent = time;
+
+        setTimeout(showTime, 1000);
+    }
+
+    showTime();
+</script>

@@ -1,0 +1,221 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.EmailGrouping.EditModel
+@inject IAntiforgery antiforgery
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Email Grouping Management";
+
+    var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "email-grouping" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Email Grouping Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Edit Email Grouping
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="EmailGroupList.Id" />
+                            <div class="form-group row">
+                                <div class="col-8">
+                                    <label asp-for="EmailGroupList.GroupName" class="control-label"></label>
+                                    <input asp-for="EmailGroupList.GroupName" class="form-control" />
+                                    <span asp-validation-for="EmailGroupList.GroupName" class="text-danger"></span>
+                                </div>
+                                <div class="col-4 d-flex align-items-end">
+                                    <button type="submit" asp-page-handler="UpdateGroupName" class="btn btn-primary" id="updateGroupName">Update</button>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-5">
+                                    <label asp-for="InputEmail" class="control-label"></label>
+                                    <select class="form-control select2" asp-for="InputEmail"></select>
+                                    <span asp-validation-for="InputEmail" class="text-danger"></span>
+                                </div>
+                                <div class="col-5">
+                                    <label asp-for="DistributionList" class="control-label"></label>
+                                    <input asp-for="DistributionList" class="form-control" />
+                                    <span asp-validation-for="DistributionList" class="text-danger"></span>
+                                </div>
+                                <div class="col-2 d-flex align-items-end">
+                                    <button type="submit" asp-page-handler="AddUser" class="btn btn-primary" id="addUser">Add User</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @if (!String.IsNullOrEmpty(TempData["Same Email"] as string))
+                                {
+                                    <div class="alert alert-custom alert-outline-2x alert-outline-warning fade show mb-5" role="alert">
+                                        <div class="alert-icon"><i class="flaticon-warning"></i></div>
+                                        <div class="alert-text">@TempData["Same Email"].ToString()</div>
+                                        <div class="alert-close">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">User Name</th>
+                                            <th scope="col">Email Address</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    @if (Model.EmailGroupList.EmailGroupUserLists != null)
+                                    {
+                                        if (Model.EmailGroupList.EmailGroupUserLists.Count() > 0)
+                                        {
+                                            <tbody>
+                                                @{
+                                                    int i = 1;
+                                                }
+
+                                                @foreach (var approver in Model.EmailGroupList.EmailGroupUserLists.ToList())
+                                                {
+                                                    <tr>
+                                                        <th scope="row">@i</th>
+                                                        <td>@approver.Username</td>
+                                                        <td>@approver.Email</td>
+                                                        <td>
+                                                            <button type="submit" class="btn btn-danger deleteUser" asp-page-handler="DeleteUser" asp-route-Id="@approver.Id">
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                                    i = i + 1;
+                                                }
+                                            </tbody>
+                                        }
+                                        else
+                                        {
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4" style="text-align: center;padding: 150px; font-weight: 600;">No Email List Yet</td>
+                                                </tr>
+                                            </tbody>
+                                        }
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="Index" class="btn btn-light">Back</a>
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#updateGroupName").click(function () {
+            $("#InputEmail").rules("remove", "required");
+            $("#DistributionList").rules("remove", "required");
+        });
+
+        $("#addUser").click(function () {
+            if ($("#InputEmail").val() || $("#DistributionList").val()) 
+            {
+                $("#InputEmail").rules("remove", "required");
+                $("#DistributionList").rules("remove", "required");
+            }
+        });
+
+        $(".btn.btn-danger.deleteUser").click(function () {
+            $("#InputEmail").rules("remove", "required");
+            $("#DistributionList").rules("remove", "required");
+            $("#EmailGroupList_GroupName").rules("remove", "required");
+        });
+
+        $('#InputEmail').select2({
+            placeholder: "Select User",
+            allowClear: true,
+            blurOnChange: true,
+            openOnEnter: false,
+            ajax: {
+                type: 'GET',
+                headers: { "RequestVerificationToken": "@token" },
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("Edit", "EmailGrouping")?handler=UserList',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        searchBy: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            },
+            formatResult: function (data) {
+                return "<div class='select2-user-result'>" + data.client + "</div>";
+            },
+            formatSelection: function (data) {
+                return data.client;
+            },
+            templateSelection: function (data, container) {
+                if (data.value === undefined) {
+                        return "Select User";
+                }
+                return data.value;
+            }
+        });
+    });
+</script>

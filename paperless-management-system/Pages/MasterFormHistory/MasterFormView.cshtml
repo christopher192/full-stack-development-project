@@ -1,0 +1,51 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterFormHistory.MasterFormViewModel
+
+@{
+    Layout = "_FormViewLayout";
+    ViewData["Title"] = "Master Form History";
+}
+
+<div class="row">
+    <div class="col-12 pt-5">
+        <h3>Master Form Name: @Model.MasterFormHistory.MasterFormName.ToString()</h3>
+        @if (Model.MasterFormHistory.MasterFormDescription != null)
+        {
+            <p class="pt-1">Description: @Model.MasterFormHistory.MasterFormDescription.ToString()</p>
+        }
+        else
+        {
+            <p class="pt-1">Description: <b>Not Available</b></p>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-4">
+        <div id="formio"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.MasterFormHistory.MasterFormData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.createForm(document.getElementById('formio'), currentForm, {
+        readOnly: true,
+        renderMode: 'form'
+    }).then(function (form) {
+
+    });;
+</script>
+

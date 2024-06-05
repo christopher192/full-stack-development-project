@@ -1,0 +1,114 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.Calendar.CreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Calendar";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "calendar" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "My Calendar" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Calendar-->
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-custom">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    Create Your Event
+                                </div>
+                            </div>
+                            <form method="post">
+                                <div class="card-body">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.Title" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.Title" class="form-control" />
+                                            <span asp-validation-for="CalendarListViewModel.Title" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.Description" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.Description" class="form-control" />
+                                            <span asp-validation-for="CalendarListViewModel.Description" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.StartDate" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.StartDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                            <span asp-validation-for="CalendarListViewModel.StartDate" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.EndDate" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.EndDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                            <span asp-validation-for="CalendarListViewModel.EndDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.StartTime" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.StartTime" class="form-control" type="time" value="@DateTime.Now.ToString("HH:mm:ss")" />
+                                            <span asp-validation-for="CalendarListViewModel.StartTime" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-6">
+                                            <label asp-for="CalendarListViewModel.Endtime" class="control-label"></label>
+                                            <input asp-for="CalendarListViewModel.Endtime" class="form-control" type="time" value="@DateTime.Now.ToString("HH:mm:ss")" />
+                                            <span asp-validation-for="CalendarListViewModel.Endtime" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a asp-page="Index" class="btn btn-light">Back</a>
+                                    <div class="float-right">
+                                        <input type="submit" value="Create" class="btn btn-primary" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Calendar-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/assets/plugins/global/plugins.bundle.js"></script>
+<script src="~/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+
+<script type="text/javascript">
+
+</script>

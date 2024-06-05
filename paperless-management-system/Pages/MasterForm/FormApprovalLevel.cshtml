@@ -1,0 +1,154 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.FormApprovalModel
+
+@{
+    ViewData["Title"] = "Form Approval";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "3" } })
+} 
+else if (Model.FormMode == "Edit") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "3" } })
+}
+else if (Model.FormMode == "EditOnly")
+{
+    @await Component.InvokeAsync("EditApprovalOnlyHeader", new { current = new string[] { "edit", "2" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form class="px-2" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FormMode" />
+            <input type="hidden" asp-for="MasterFormId" />
+
+            <div class="form-group">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary" asp-page-handler="CreateApprovalLevel">Create Approval Level</button>
+                </div>
+            </div>
+
+            @if (ViewData["Empty Approver"] != null) {
+                <div class="form-group">
+                    <div class="alert alert-warning p-3" role="alert">
+                        Empty approvers found, unable to submit.
+                    </div>
+                </div>
+            }
+
+            @if (Model.formApprovalLevel.Count() == 0)
+            {
+                <div class="form-group">
+                    <div class="border d-flex align-items-center justify-content-center" style="height: 450px;">
+                        <h1>No Approval Yet</h1>
+                    </div>
+                </div>
+            }
+            else
+            {
+                for (int i = 0; i < Model.formApprovalLevel.Count(); i++)
+                {
+                    <input type="hidden" asp-for="formApprovalLevel[i].Id" />
+
+                    <div class="form-row">
+                        <div class="col-12 form-group">
+                            <h4 class="pb-3">Approval Level @(i + 1)</h4>
+                        </div>
+                        <div class="col-12 form-group">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Approver Name</th>
+                                        <th scope="col">Approver Email</th>
+                                        <th scope="col">Employee Id</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var formApprovers = Model.formApprovers.Where(x => x.FormApprovalLevelId == Model.formApprovalLevel[i].Id).ToList();
+                                    }
+
+                                    @if (formApprovers.Count() > 0)
+                                    {
+                                        for (int x = 0; x < formApprovers.Count(); x++)
+                                        {
+                                            <tr>
+                                                <th scope="row">@(x + 1)</th>
+                                                <td>@formApprovers[x].ApproverName</td>
+                                                <td>@formApprovers[x].ApproverEmail</td>
+                                                <td>@formApprovers[x].EmployeeId</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {          
+                                        <tr>
+                                            <td colspan="5" style="text-align: center;padding: 100px; font-weight: 600;">No Approver Yet</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-12 form-group">
+                            <div class="d-flex justify-content-end">
+                                <input type="submit" class="btn btn-primary" asp-page-handler="EditFormApprovalLevel" asp-route-ApprovalLevelId="@Model.formApprovalLevel[i].Id" value="Edit" />
+                                <input type="submit" class="btn btn-danger ml-1" asp-page-handler="DeleteFormApprovalLevel" asp-route-ApprovalLevelId="@Model.formApprovalLevel[i].Id" value="Delete" />
+                            </div>
+                        </div>
+                    </div>
+
+                    // binding this list
+                    @for (int b = 0; b < Model.formApprovers.Count(); b++)
+                    {
+                        <input type="hidden" asp-for="formApprovers[b].Id" />
+                        <input type="hidden" asp-for="formApprovers[b].ApproverName" />
+                        <input type="hidden" asp-for="formApprovers[b].ApproverEmail" />
+                        <input type="hidden" asp-for="formApprovers[b].EmployeeId" />
+                        <input type="hidden" asp-for="formApprovers[b].FormApprovalLevelId" />
+                    }
+                }
+            }
+
+            <div class="form-group border-top mt-1">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Previous" value="Previous" />
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Save" value="Save" />
+                        <input type="submit" class="btn btn-primary" asp-page-handler="Next" value="Next" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Wizard Form-->            
+    </div>
+</div>
+<!--end::Wizard Body-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type='text/javascript'>
+    function refreshAndClose() {
+        parent.document.location.href = "@Url.Action("Index", "MasterForm")";
+        window.opener.location.reload(true);
+        window.close();
+    }
+
+    var CloseWindowValue = '@TempData["Save"]';
+
+    if (CloseWindowValue !== null && CloseWindowValue !== '') {
+        refreshAndClose();
+    }
+</script>

@@ -1,0 +1,184 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.MasterFormBuilderModel
+
+@{
+    ViewData["Title"] = "Master Form Builder";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "2" } })
+} 
+else if (Model.FormMode == "Edit") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "2" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form class="px-2" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="formDesignViewModel.MasterFormId" class="form-control" type="hidden" />
+            <input asp-for="FormMode" class="form-control" type="hidden" />
+            <input asp-for="formDesignViewModel.MasterFormDesignData" class="form-control" type="hidden" />
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Form Preview</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="formio" class="card card-body bg-light"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Form Preview</button>
+                </div>
+            </div>
+
+            @if (ViewData["Empty Form Data"] != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning p-3" role="alert">
+                        Cannot proceed, empty form data is found!
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <div id="builder"></div>
+            </div>
+
+            <div class="form-group border-top mt-5">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <input asp-page-handler="Previous" class="btn btn-primary" type="submit" value="Previous" />
+                    </div>
+                    <div>
+                        <input asp-page-handler="Save" class="btn btn-primary" type="submit" value="Save" />
+                        <input asp-page-handler="Next" class="btn btn-primary" type="submit" value="Next" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Wizard Form-->
+    </div>
+</div>
+<!--end::Wizard Body-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var currentForm = JSON.parse((@Json.Serialize(Model.formDesignViewModel.MasterFormDesignData)));
+
+    if (currentForm === null) {
+        var builder = new Formio.FormBuilder(document.getElementById("builder"), {
+            display: 'form'
+        }, {
+            noDefaultSubmitButton: true,
+        });
+
+        var formElement = document.getElementById('formio');
+
+        var onBuild = function (build) {
+            var json = document.getElementById("formDesignViewModel_MasterFormDesignData");
+            json.value = JSON.stringify(builder.instance.schema);
+
+            formElement.innerHTML = '';
+            Formio.createForm(formElement, builder.instance.form);
+        };
+
+        var onReady = function () {
+            builder.instance.on('change', onBuild);
+        };
+
+        builder.instance.ready.then(onReady);
+    }
+    else {
+        function checkData(components) {
+            if (components !== null) {
+                return components.components;
+            }
+
+            return null;
+        }
+
+        var builder = new Formio.FormBuilder(document.getElementById("builder"), {
+            display: 'form',
+            components: checkData(currentForm)
+        }, {
+            noDefaultSubmitButton: true,
+        });
+
+        var formElement = document.getElementById('formio');
+
+        Formio.createForm(formElement, currentForm);
+
+        var onBuild = function (build) {
+            var json = document.getElementById("formDesignViewModel_MasterFormDesignData");
+            json.value = JSON.stringify(builder.instance.schema);
+
+            formElement.innerHTML = '';
+            Formio.createForm(formElement, builder.instance.form);
+        };
+
+        var onReady = function () {
+            builder.instance.on('change', onBuild);
+        };
+
+        builder.instance.ready.then(onReady);
+    }
+
+    function refreshAndClose() {
+        parent.document.location.href = "@Url.Action("Index", "MasterForm")";
+        window.opener.location.reload(true);
+        window.close();
+    }
+
+    var CloseWindowValue = '@TempData["Save"]';
+
+    if (CloseWindowValue !== null && CloseWindowValue !== '') {
+        refreshAndClose();
+    }
+
+    function AutoSave() {
+        var getId = $('#formDesignViewModel_MasterFormId').val();
+        var getData = $('#formDesignViewModel_MasterFormDesignData').val();
+        var formObject = { "Id": getId, "FormData": getData };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AutoSaveMasterForm", "GlobalFunction")",
+            data: formObject,
+            dataType: "json",
+            success: function (msg) {
+                    // console.log(msg);
+                },
+            error: function (req, status, error) {
+                console.log(error);
+            }
+        });
+    }
+
+    setInterval(AutoSave, 10000);
+</script>

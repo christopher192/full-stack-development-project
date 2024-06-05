@@ -1,0 +1,911 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.MasterForm.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Master Form Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "master-form" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Master Form Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+
+                        </div>
+                        <div class="card-toolbar">
+                            <!--begin::Button-->
+                            <a href="javascript:;" class="btn btn-primary font-weight-bolder mr-2" onclick="windowCreatePopUp()">
+                                <span class="svg-icon svg-icon-md">
+                                    <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="24" height="24" />
+                                            <circle fill="#000000" cx="9" cy="15" r="6" />
+                                            <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+                                        </g>
+                                    </svg>
+                                    <!--end::Svg Icon-->
+                                </span>Create Master Form
+                            </a>
+                            <!--end::Button-->
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <!--begin: Search Form-->
+                        <form class="mb-15">
+                            <div class="row mb-6">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Master Form Name:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: eXX-X-XX-XX-XXXXX" data-col-index="0" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Master Form Description:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: For Production" data-col-index="1" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Status:</label>
+                                    <select class="form-control datatable-input" data-col-index="2">
+                                        <option value="">Select</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Editing">Editing</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-8">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Created Date:</label>
+                                    <div class="input-daterange input-group" id="createddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="3" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="3" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Modified Date:</label>
+                                    <div class="input-daterange input-group" id="modifieddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="4" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="4" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                    <label>Owner:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: XXXXX" data-col-index="5" />
+                                </div>
+                                <div class="col-lg-2 mb-lg-0 mb-6">
+                                    <label>Export Action:</label>
+                                    <button class="btn btn-primary d-block" id="export_table">Export Table</button>
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                                        <span>
+                                            <i class="la la-search"></i>
+                                            <span>Search</span>
+                                        </span>
+                                    </button>&#160;&#160;
+                                    <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                        <span>
+                                            <i class="la la-close"></i>
+                                            <span>Reset</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!--begin: Datatable-->
+                        <table class="table table-bordered table-hover table-checkable" id="masterform_datatable" style="margin-top: 13px !important" width="100%">
+                            <thead>
+                                <tr>
+
+                                    <th>Form Name</th>
+                                    <th>Form Description</th>
+                                    <th>Revision</th>
+                                    <th>Status</th>
+                                    <th>Created By</th>
+                                    <th>Created Date</th>
+                                    <th>Modified By</th>
+                                    <th>Modified Date</th>
+                                    <th>Department</th>
+                                    <th>Change Log</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+<!--start:Modal-->
+<!--start:Timeline Modal-->
+<div class="modal fade" id="TimeLineShowing" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Approval Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="MasterFormDetail"></div>
+                <div class="timeline timeline-2">
+                    <div class="timeline-bar"></div>
+                    <div id="TimeLineData"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end:Timeline Modal-->
+
+<!--start:Change Log Modal-->
+<div class="modal fade" id="ChangeLogShowing" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change Log</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="timeline timeline-2">
+                    <div class="timeline-bar"></div>
+                    <div id="ChangeLogData"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end:Change Log Modal-->
+
+<!--start:Duplicate Template Modal-->
+<div class="modal fade" id="DuplicateTemplateShowing" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Duplicate Master Form</h5>
+            </div>
+            <div class="modal-body">
+                <div id="DuplicateFormTemplate"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end:Duplicate Template Modal-->
+<!--end:Modal-->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+<script type="text/javascript">
+    // window pop up for create master form
+    function windowCreatePopUp() {
+        var x = window.open("@Url.Action("NumbericBuilder", "MasterForm")/Create", 'popUpWindow', 'toolbar=no,menubar=no,scrollbars=yes,fullscreen=yes,resizable=yes,location=no,directories=no,status=no,width=4000,height=4000');
+        var win_timer = setInterval(function () {
+            if (x.closed) {
+                window.location.reload();
+                clearInterval(win_timer);
+            }
+        }, 100);
+    }
+
+    // window pop up for edit master form
+    function windowEditPopUp(id) {
+        var x = window.open("@Url.Action("NumbericBuilder", "MasterForm")/Edit/" + id + "", 'popUpWindow', 'toolbar=no,menubar=no,scrollbars=yes,fullscreen=yes,resizable=yes,location=no,directories=no,status=no,width=4000,height=4000');
+        var win_timer = setInterval(function () {
+            if (x.closed) {
+                window.location.reload();
+                clearInterval(win_timer);
+            }
+        }, 100);
+    }
+
+    // window pop up for edit only master form
+    function windowEditOnlyPopUp(id) {
+        var x = window.open("@Url.Action("NumbericBuilder", "MasterForm")/EditOnly/" + id + "", 'popUpWindow', 'toolbar=no,menubar=no,scrollbars=yes,fullscreen=yes,resizable=yes,location=no,directories=no,status=no,width=4000,height=4000');
+        var win_timer = setInterval(function () {
+            if (x.closed) {
+                window.location.reload();
+                clearInterval(win_timer);
+            }
+        }, 100);
+    }
+
+    // window pop up for up revision
+    function windowUpRevisionPopUp(id) {
+        var x = window.open("@Url.Action("NumbericBuilder", "MasterForm")/UpRevision/" + id, 'popUpWindow', 'toolbar=no,menubar=no,scrollbars=yes,fullscreen=yes,resizable=yes,location=no,directories=no,status=no,width=4000,height=4000');
+        var win_timer = setInterval(function () {
+            if (x.closed) {
+                window.location.reload();
+                clearInterval(win_timer);
+            }
+        }, 100);
+    }
+
+    // window pop up for duplicate form
+    function windowChooseFormPopUp(id) {
+        $("#DuplicateTemplateShowing").modal('hide');
+        var x = window.open("@Url.Action("NumbericBuilder", "MasterForm")/DuplicateForm/" + id, 'popUpWindow', 'toolbar=no,menubar=no,scrollbars=yes,fullscreen=yes,resizable=yes,location=no,directories=no,status=no,width=4000,height=4000');
+        var win_timer = setInterval(function () {
+            if (x.closed) {
+                window.location.reload();
+                clearInterval(win_timer);
+            }
+        }, 100);
+    }
+
+    function duplicateUpRevision(id) {
+        $("#DuplicateTemplateShowing").modal('hide');
+        windowUpRevisionPopUp(id);
+    }
+
+    var dataTableAdvancedSearch = function () {
+        var initDataTable = function () {
+            var currentUser = "@Model.CurrentUser";
+            var containSystemAdmin = ("@Model.IsSuperAdmin" === "True" ? true : false);
+
+            var table = $("#masterform_datatable").DataTable({
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                paging: true,
+                responsive: true,
+                autoWidth: false,
+                searching: { regex: true },
+                lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: 'Export Excel',
+                        title: 'Master Form List',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                page: 'current'
+                            }
+                        }
+                    }
+                ],
+                dom: `<'row'<'col-sm-12'tr>>
+			        <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>s`,
+                language: {
+                    'lengthMenu': 'Display _MENU_',
+                },
+                ajax: {
+                    url: "@Url.Action("LoadMasterFormTable", "DataTable")",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "masterFormName" },
+                    { data: "masterFormDescription" },
+                    { data: "masterFormRevision" },
+                    { data: "masterFormStatus" },
+                    { data: "createdBy" },
+                    { data: "createdDate" },
+                    { data: "modifiedBy" },
+                    { data: "modifiedDate" },
+                    { data: "departments", orderable: false },
+                    { data: "changeLog", orderable: false },
+                    { data: null, responsivePriority: -1 }
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (data) {
+                            return data;
+                        }
+                    },
+                    {
+                        targets: 1,
+                        render: function (data) {
+                            if (data !== null && data !== "") {
+                                return data;
+                            }
+                            else {
+                                return "Not Available";
+                            }
+                        }
+                    },
+                    {
+                        targets: 2,
+                        render: function (data, type, full, meta) {
+                            return 'Rev ' + data;
+                        }
+                    },
+                    {
+                        targets: 3,
+                        render: function (data, type, full, meta) {
+                            var status = {
+                                'active': { 'title': 'Active', 'class': ' label-light-primary' },
+                                'inactive': { 'title': 'Inactive', 'class': ' label-secondary' },
+                                'editing': { 'title': 'Editing', 'class': ' label-light-info' },
+                                'pending': { 'title': 'Pending', 'class': ' label-light-warning' },
+                                'rejected': { 'title': 'Rejected', 'class': ' label-light-danger' }
+                            };
+
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+
+                            return '<a id="TriggerTimeLineModel" href="javascript:;" class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</a>';
+                        }
+                    },
+                    {
+                        targets: 5,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 6,
+                        render: function (data) {
+                            return (data !== null && data !== "") ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 7,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 8,
+                        render: function (data) {
+                            //var departments = [];
+
+                            //if (data.timeLineData !== null) 
+                            //{
+                            //    var getJSON = JSON.parse(data.timeLineData);
+
+                            //    if (getJSON.MasterFormDepartments !== null) { 
+                            //        if (getJSON.MasterFormDepartments.length > 0) {
+                            //            for (let i = 0; i < getJSON.MasterFormDepartments.length; i++) {
+                            //               departments.push(getJSON.MasterFormDepartments[i].DepartmentName);
+                            //            }
+                            //        }
+                            //    }                                
+                            //}      
+                            
+                            //return (departments.length > 0 ? departments.join(', ') : 'Not Available');
+                            return (data !== null && data !== "") ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 9,
+                        render: function (data, type, full, meta) {
+                            if (data === null) {
+                                return "Not Available";
+                            }
+                            else {
+                                return '<a href="javascript:;" id="TriggerChangeLogModel" class="label label-lg font-weight-bold label-light-primary label-inline">View</a>';
+                            }
+                        }
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        data: null,
+                        render: function(data, type, full, meta) {                            
+                            // difference between L1 Admin and Super Admin is Super Admin able to delete master form while the status is 'editing'
+                            if (containSystemAdmin) {
+                                var WriteHtml = "";
+                                
+                                if (full.masterFormStatus === "active") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditOnlyPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Duplicate master form" id="TriggerDuplicateTemplateModel" href="javascript:;"><i class="la la-plus-circle"></i></a>';
+                                    
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "inactive") {                            
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+                                    
+                                    return WriteHtml;
+                                } 
+                                else if (full.masterFormStatus === "editing") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+
+                                    if (full.editor !== null && full.editor === currentUser) {
+                                        WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    } else if (full.editor === null) {
+                                        WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    }
+
+                                     WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Delete master form" href="@Url.Action("Delete", "MasterForm")/' + full.id + '"><i class="la la-trash"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "pending") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "rejected") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Delete master form" href="@Url.Action("Delete", "MasterForm")/' + full.id + '"><i class="la la-trash"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                            }
+                            else {
+                                var WriteHtml = "";
+
+                                if (full.masterFormStatus === "active") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditOnlyPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Duplicate master form" id="TriggerDuplicateTemplateModel" href="javascript:;"><i class="la la-plus-circle"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "inactive") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "editing") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+
+                                    if (full.editor !== null && full.editor === currentUser) {
+                                        WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    } else if (full.editor === null) {
+                                        WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    }
+
+                                    return WriteHtml;
+                                }
+                                else if (full.masterFormStatus === "pending") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                                else if (full.formMasterStatus === "rejected") {
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("Details", "MasterForm")/' + full.id + '"><i class="la la-eye"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Edit master form" href="javascript:windowEditPopUp(' + full.id + ');"><i class="la la-edit"></i></a>';
+                                    WriteHtml += '<a class="btn btn-sm btn-clean btn-icon" title="Delete master form" href="@Url.Action("Delete", "MasterForm")/' + full.id + '"><i class="la la-trash"></i></a>';
+
+                                    return WriteHtml;
+                                }
+                            }
+                        }
+                    }
+                ]
+            });
+
+            function refreshDataTable() {
+                table.ajax.reload();
+            }
+
+            table.on('click', 'a#TriggerChangeLogModel', function () {
+                var data = (typeof table.row(this).data() !== "undefined" ? table.row(this).data() : table.row($(this).parents('tr')).data());
+
+                var split = data.changeLog.split(/-(.+)/);
+                var removeWhiteSpace = split.map(x => x.trim());
+                // Remove last array element
+                removeWhiteSpace.pop();
+
+                var writeHTML = "";
+                var changeLogData = removeWhiteSpace;
+
+                $("#ChangeLogData").empty();
+
+                var description = [];
+                var time = [];
+
+                for (var i = 1; i <= changeLogData.length; i++) {
+                    if ((i % 2) === 0) {
+                        description.push(changeLogData[i - 1]);
+                    }
+                }
+
+                for (var i = 1; i <= changeLogData.length; i++) {
+                    if ((i % 2) === 1) {
+                        time.push(changeLogData[i - 1]);
+                    }
+                }
+
+                var newChangeLogData = [];
+
+                if (description.length === time.length) {
+                    for (var i = 0; i < description.length; i++) {
+                        newChangeLogData.push(description[i]);
+                        newChangeLogData.push(time[i]);
+                    }
+                }
+
+                for (var i = 0; i < newChangeLogData.length; i++) {
+
+                    if ((i % 2) === 1) {
+                        writeHTML += "<span class='text-muted text-right'>" + newChangeLogData[i] + "</span>";
+                        writeHTML += "</div>";
+                        writeHTML += "</div>";
+                    }
+                    else {
+                        writeHTML += "<div class='timeline-item'>";
+                        writeHTML += "<div class='timeline-badge bg-primary'></div>";
+                        writeHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        writeHTML += "<span class='mr-3'>" + newChangeLogData[i] + "</span>";
+                    }
+
+                }
+
+                $("#ChangeLogData").append(writeHTML);
+
+                $("#ChangeLogShowing").modal('show');
+            });
+
+            table.on('click', 'a#TriggerTimeLineModel', function () {
+                var data = (typeof table.row(this).data() !== "undefined" ? table.row(this).data() : table.row($(this).parents('tr')).data());
+
+                if (data.timeLineData !== null) {
+                    var TimeLineData = JSON.parse(data.timeLineData);
+                    console.log(TimeLineData);
+                    var approvalLevel = [];
+                    var approvers = [];
+                    var pendingApproversDictionary = [];
+                    var getLevel = [];
+                    var uniqueLevel = [];
+
+                    function distinctLevel(value, index, self) {
+                        return self.indexOf(value) === index;
+                    }
+
+                    function matchDepartment(item, index) {
+                        if (item !== null) {
+                            if (item.MasterFormCCBApprovalLevels.length !== 0) {
+                                for (var i = 0; i < item.MasterFormCCBApprovalLevels.length; i++) {
+                                    approvalLevel.push(item.MasterFormCCBApprovalLevels[i]);
+                                }
+                            }
+
+                            if (item.MasterFormCCBApprovalLevels !== null) {
+                                if (item.MasterFormCCBApprovalLevels.length !== 0) {
+                                    for (var i = 0; i < item.MasterFormCCBApprovalLevels.length; i++) {
+                                        for (var j = 0; j < item.MasterFormCCBApprovalLevels[i].MasterFormCCBApprovers.length; j++) {
+                                            if (item.MasterFormCCBApprovalLevels[i].ApprovalStatus === "pending" && item.MasterFormCCBApprovalLevels[i].MasterFormCCBApprovers[j].ApproverStatus === "pending") {
+                                                pendingApproversDictionary.push({
+                                                    key: "Level " + (i + 1),
+                                                    value: approvalLevel[i].MasterFormCCBApprovers[j]
+                                                });
+
+                                                getLevel.push("Level " + (i + 1));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    TimeLineData.MasterFormDepartments.forEach(matchDepartment);
+
+                    for (var i = 0; i < approvalLevel.length; i++) {
+                        for (var j = 0; j < approvalLevel[i].MasterFormCCBApprovers.length; j++) {
+                            if (approvalLevel[i].MasterFormCCBApprovers[j].ApproverStatus === "approved" || approvalLevel[i].MasterFormCCBApprovers[j].ApproverStatus === "rejected") {
+                                approvers.push(approvalLevel[i].MasterFormCCBApprovers[j]);
+                            }
+                        }
+                    }
+
+                    approvers.sort((a, b) => new Date(a.ApproveDate) - new Date(b.ApproveDate));
+
+                    uniqueLevel = getLevel.filter(distinctLevel).sort();
+
+                    var WriteMasterFormHTML = "";
+                    var WriteTimeLineHTML = "";
+
+                    $("#MasterFormDetail").empty();
+                    $("#TimeLineData").empty();
+
+                    WriteMasterFormHTML += "<p>Master Form Name: <b>" + data.masterFormName + "</b></p>";
+                    WriteMasterFormHTML += "<p>Description: <b>" + (data.masterFormDescription === null ? 'Not Available': data.masterFormDescription) + "</b></p>";
+
+                    if (data.masterFormStatus === "pending") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-warning'>Pending</span></p>";
+                    }
+                    else if (data.masterFormStatus === "active") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-primary'>Active</span></p>";
+                    }
+                    else if (data.masterFormStatus === "rejected") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-danger'>Reject</span></p>";
+                    }
+                    else if (data.masterFormStatus === "editing") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-info'>Editing</span></p>";
+                    };
+
+                    if (data.modifiedBy === null && data.modifiedDate === null) {
+
+                    } else {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + data.modifiedBy + "</b> modify form <b>" + data.masterFormName + "</b></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(data.modifiedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+
+                    if (data.submittedBy === null && data.submittedDate === null) {
+
+                    }
+                    else {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge bg-primary'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + data.submittedBy + "</b> submit form <b>" + data.masterFormName + "</b></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(data.submittedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+
+                    for (var i = 0; i < approvers.length; i++) {
+                        if (approvers[i].ApproverStatus === "approved") {
+                            WriteTimeLineHTML += "<div class='timeline-item'>";
+                            WriteTimeLineHTML += "<div class='timeline-badge bg-success'></div>";
+                            WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                            WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> approve form <b>" + data.masterFormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                            WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApproveDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                            WriteTimeLineHTML += "</div>";
+                            WriteTimeLineHTML += "</div>";
+                        }
+                        else if (approvers[i].ApproverStatus === "rejected") {
+                            WriteTimeLineHTML += "<div class='timeline-item'>";
+                            WriteTimeLineHTML += "<div class='timeline-badge bg-danger'></div>";
+                            WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                            WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> reject form <b>" + data.masterFormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                            WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApproveDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                            WriteTimeLineHTML += "</div>";
+                            WriteTimeLineHTML += "</div>";
+                        }
+                    }
+
+                    if (uniqueLevel.length !== 0) {
+                        if (pendingApproversDictionary.length !== 0) {
+                            for (var i = 0; i < uniqueLevel.length; i++) {
+                                for (var j = 0; j < pendingApproversDictionary.length; j++) {
+                                    if (pendingApproversDictionary[j].key === uniqueLevel[i]) {
+                                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                                        WriteTimeLineHTML += "<div class='timeline-badge bg-warning'></div>";
+                                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                                        WriteTimeLineHTML += "<span class='mr-3'>" + "Pending approver " + pendingApproversDictionary[j].key + " - <b>" + pendingApproversDictionary[j].value.ApproverName + "</b></span>";
+                                        WriteTimeLineHTML += "</div>";
+                                        WriteTimeLineHTML += "</div>";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    $("#MasterFormDetail").append(WriteMasterFormHTML);
+                    $("#TimeLineData").append(WriteTimeLineHTML);
+
+                    $("#TimeLineShowing").modal('show');
+                }
+                else {
+                    var WriteMasterFormHTML = "";
+                    var WriteTimeLineHTML = "";
+
+                    $("#MasterFormDetail").empty();
+                    $("#TimeLineData").empty();
+
+                    WriteMasterFormHTML += "<p>Master Form Name: <b>" + data.masterFormName + "</b></p>";
+                    WriteMasterFormHTML += "<p>Description: <b>" + (data.masterFormDescription === null ? 'Not Available' : data.masterFormDescription) + "</b></p>";
+
+                    if (data.masterFormStatus === "pending") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-warning'>Pending</span></p>";
+                    }
+                    else if (data.masterFormStatus === "active") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-primary'>Active</span></p>";
+                    }
+                    else if (data.masterFormStatus === "rejected") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-danger'>Reject</span></p>";
+                    }
+                    else if (data.masterFormStatus === "editing") {
+                        WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-info'>Editing</span></p>";
+                    };
+
+                    if (data.modifiedBy === null && data.modifiedDate === null) {
+
+                    } else {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + data.modifiedBy + "</b> modify form <b>" + data.masterFormName + "</b></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(data.modifiedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+
+                    if (data.submittedBy === null && data.submittedDate === null) {
+
+                    }
+                    else {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge bg-primary'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + data.submittedBy + "</b> submit form <b>" + data.masterFormName + "</b></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(data.submittedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+
+                    $("#MasterFormDetail").append(WriteMasterFormHTML);
+                    $("#TimeLineData").append(WriteTimeLineHTML);
+
+                    $("#TimeLineShowing").modal('show');                
+                }
+            });
+
+            table.on('click', 'a#TriggerDuplicateTemplateModel', function () {
+                var data = (typeof table.row(this).data() !== "undefined" ? table.row(this).data() : table.row($(this).parents('tr')).data());
+                var WriteHTML = "";
+
+                $("#DuplicateFormTemplate").empty();
+
+                WriteHTML += "<div class='text-center'>";
+                if (data.allowUpRevision === true) {
+                    WriteHTML += "<button class='btn btn-primary' onclick='duplicateUpRevision(" + data.id + ")'>Up Revision</button>";
+                }
+                WriteHTML += "<button class='btn btn-success ml-2' onclick='windowChooseFormPopUp(" + data.id + ")'>Select Form</button>";
+                WriteHTML += "</div>";
+
+                $("#DuplicateFormTemplate").append(WriteHTML);
+                $("#DuplicateTemplateShowing").modal('show');
+            });
+
+            var filter = function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                table.column($(this).data('col-index')).search(val ? val : '', false, false).draw();
+            };
+
+            var asdasd = function (value, index) {
+                var val = $.fn.dataTable.util.escapeRegex(value);
+                table.column(index).search(val ? val : '', false, true);
+            };
+
+            $('#kt_search').on('click', function (e) {
+                e.preventDefault();
+
+                var params = { };
+
+                $('.datatable-input').each(function () {
+                    var i = $(this).data('col-index');
+                    if (params[i]) {
+                        params[i] += '|' + $(this).val();
+                    }
+                    else {
+                        params[i] = $(this).val();
+                    }
+                });
+
+                $.each(params, function (i, val) {
+                    table.column(i).search(val ? val : '', false, false);
+                });
+
+                table.table().draw();
+            });
+
+            $('#kt_reset').on('click', function (e) {
+                e.preventDefault();
+
+                $('.datatable-input').each(function () {
+                    $(this).val('');
+                    table.column($(this).data('col-index')).search('', false, false);
+                });
+
+                table.table().draw();
+            });
+
+            $('#createddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                }
+            });
+
+            $('#modifieddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                }
+            });
+
+            $('#export_table').on('click', function (e) {
+                e.preventDefault();
+                table.button(0).trigger();
+            });
+
+            $("form").keypress(function (e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    $('#kt_search').trigger("click");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+        };
+
+        return {
+            init: function () {
+                initDataTable();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        dataTableAdvancedSearch.init();
+    });
+</script>

@@ -1,0 +1,89 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.UserManual.DeleteModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Manual Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "user-manual" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "User Manual Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Delete User Manual
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <input type="hidden" asp-for="UserManualList.Id" />
+                            </div>
+                            <div class="form-group row mt-8">
+                                <div class="col-6">
+                                    <label asp-for="UserManualList.UserManualName" class="control-label"></label>
+                                    <input asp-for="UserManualList.UserManualName" class="form-control" disabled />
+                                    <span asp-validation-for="UserManualList.UserManualName" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="UserManualList.UserManualDescription" class="control-label"></label>
+                                    <input asp-for="UserManualList.UserManualDescription" class="form-control" disabled />
+                                    <span asp-validation-for="UserManualList.UserManualDescription" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-8">
+                                <div class="col-6">
+                                    <label asp-for="UserManualList.Status" class="control-label"></label>
+                                    <select asp-for="UserManualList.Status" class="form-control" asp-items="ViewBag.SelectionStatus" disabled></select>
+                                    <span asp-validation-for="UserManualList.Status" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->

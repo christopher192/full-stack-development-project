@@ -1,0 +1,176 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.DepartmentModel
+
+@{
+    ViewData["Title"] = "Department";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "4" } })
+} 
+else if (Model.FormMode == "Edit") 
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "4" } })
+}
+else if (Model.FormMode == "EditOnly")
+{
+    @await Component.InvokeAsync("EditApprovalOnlyHeader", new { current = new string[] { "edit", "3" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form class="px-2" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FormMode" />
+            <input type="hidden" asp-for="MasterFormId" />
+
+            @if (ViewData["Empty Department"] != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert">
+                        Unable to process, kindly add at least one department!
+                    </div>
+                </div>
+            }
+
+            @if (ViewData["Same Department"] != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert">
+                        Unable to process, selected department is already existed!
+                    </div>
+                </div>
+            }
+
+            <div class="form-row pt-2 pb-3">
+                <div class="col">
+                    <select class="form-control select2" asp-for="SelectDepartment"></select>
+                    <span asp-validation-for="SelectDepartment" class="text-danger"></span>
+                </div>
+                <div class="col-auto">
+                    <input type="submit" class="btn btn-primary" asp-page-handler="AddDepartment" value="Add Department" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Departments.Count() > 0)
+                        {
+                            for (int i = 0; i < Model.Departments.Count(); i++)
+                            {
+                                // binding this list
+                                <input type="hidden" asp-for="Departments[i].Id" />
+                                <input type="hidden" asp-for="Departments[i].DepartmentName" />
+
+                                <tr>
+                                    <th scope="row">@(i + 1)</th>
+                                    <td>@Model.Departments[i].DepartmentName</td>
+                                    <td>
+                                        <button type="submit" asp-page-handler="DeleteDepartment" asp-route-DepartmentId="@Model.Departments[i].Id" class="deleteDepartmentButton btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" style="text-align: center;padding: 100px; font-weight: 600;">No Department Yet</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group border-top mt-4">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <button type="submit" id="previousButton" class="btn btn-primary" asp-page-handler="Previous">Previous</button>
+                    </div>
+                    <div>
+                        <button type="submit" id="saveButton" class="btn btn-primary" asp-page-handler="Save">Save</button>
+                        <button type="submit" id="nextButton" class="btn btn-primary" asp-page-handler="Next">Next</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Wizard Form-->
+    </div>
+</div>
+<!--end::Wizard Body-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type='text/javascript'>
+    $(document).ready(function () {
+        $('#SelectDepartment').select2({
+            placeholder: "Select Cost Center",
+            allowClear: true,
+            blurOnChange: true,
+            openOnEnter: false,
+            ajax: {
+                url: "@Url.Action("GetCostCenterLists", "api")",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        costCenterName: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return { results: data };
+                },
+                cache: true
+            },
+            error: function () {
+                alert('Failed');
+            },
+            formatResult: function (data) {
+                return "<div class='select2-user-result'>" + data.client + "</div>";
+            },
+            formatSelection: function (data) {
+                return data.client;
+            },
+            templateSelection: function (data, container) {
+                if (data.value === undefined) {
+                    return "Select Cost Center";
+                }
+                return data.value;
+            }
+        });
+
+        // clear specific client side validation error
+        // so that we can proceed to backend
+        $("#previousButton, #nextButton, #saveButton, .deleteDepartmentButton").on("click", function () {
+            $("#SelectDepartment").rules("remove", "required");
+        });
+    });
+
+    function refreshAndClose() {
+        parent.document.location.href = "@Url.Action("Index", "MasterForm")";
+        window.opener.location.reload(true);
+        window.close();
+    }
+
+    var CloseWindowValue = '@TempData["Save"]';
+
+    if (CloseWindowValue !== null && CloseWindowValue !== '') {
+        refreshAndClose();
+    }
+</script>

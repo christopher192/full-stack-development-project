@@ -1,0 +1,182 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.Setting.CreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "API Setting Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "managenumberingscheme-factory" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "API Setting Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Create API Setting
+                        </div>
+                        <div class="card-toolbar">
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="APISetting.Title" class="control-label">Title <span class="text-danger">*</span></label>
+                                    <input asp-for="APISetting.Title" class="form-control" />
+                                    <span asp-validation-for="APISetting.Title" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="APISetting.APIType" class="control-label">API Type <span class="text-danger">*</span></label>
+                                    <select asp-for="APISetting.APIType" class="form-control" asp-items="Model.APIType"></select>
+                                    <span asp-validation-for="APISetting.APIType" class="text-danger"></span>
+
+                                    @for (int i = 0; i < Model.APIType.Count(); i++)
+                                    {
+                                        <input type="hidden" asp-for="APIType[i].Text" />
+                                        <input type="hidden" asp-for="APIType[i].Value" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="APISetting.Description" class="control-label"></label>
+                                <textarea asp-for="APISetting.Description" class="form-control"></textarea>
+                                <span asp-validation-for="APISetting.Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="separator separator-dashed my-10"></div>
+
+                            <div class="form-group d-flex justify-content-end">
+                                <a href="javascript:;" class="btn btn-primary" id="very_connection"><i class="flaticon-search"></i> Verify Connection</a>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="APISetting.ServiceName" class="control-label"></label>
+                                    <input asp-for="APISetting.ServiceName" class="form-control" />
+                                    <span asp-validation-for="APISetting.ServiceName" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="APISetting.DatabaseName" class="control-label"></label>
+                                    <input asp-for="APISetting.DatabaseName" class="form-control" />
+                                    <span asp-validation-for="APISetting.DatabaseName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="APISetting.Port" class="control-label"></label>
+                                    <input asp-for="APISetting.Port" class="form-control" />
+                                    <span asp-validation-for="APISetting.Port" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="APISetting.SID" class="control-label"></label>
+                                    <input asp-for="APISetting.SID" class="form-control" />
+                                    <span asp-validation-for="APISetting.SID" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label asp-for="APISetting.UserName" class="control-label"></label>
+                                    <input asp-for="APISetting.UserName" class="form-control" />
+                                    <span asp-validation-for="APISetting.UserName" class="text-danger"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label asp-for="APISetting.Password" class="control-label"></label>
+                                    <input asp-for="APISetting.Password" class="form-control" />
+                                    <span asp-validation-for="APISetting.Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="APISetting.DatabaseScript" class="control-label"></label>
+                                <textarea asp-for="APISetting.DatabaseScript" class="form-control"></textarea>
+                                <span class="form-text text-muted">The column is provided SQL script. Example: select * from Employee</span>
+                                <span asp-validation-for="APISetting.DatabaseScript" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Additional Script</label>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="Index" class="btn btn-light">Back</a>
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type='text/javascript'>
+    // Class definition
+    var KTFormRepeater = function () {
+
+        // Private functions
+        var demo1 = function () {
+            $('#kt_repeater_1').repeater({
+                initEmpty: false,
+
+                defaultValues: {
+                    'text-input': 'foo'
+                },
+
+                show: function () {
+                    $(this).slideDown();
+                },
+
+                hide: function (deleteElement) {
+                    $(this).slideUp(deleteElement);
+                }
+            });
+        }
+
+        return {
+            // public functions
+            init: function () {
+                demo1();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        KTFormRepeater.init();
+    });
+</script>

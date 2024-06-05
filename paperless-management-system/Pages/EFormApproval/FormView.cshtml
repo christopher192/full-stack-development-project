@@ -1,0 +1,64 @@
+﻿@page "{FormId?}"
+@model WD_ERECORD_CORE.Pages.EFormApproval.FormViewModel
+
+@{
+    Layout = "_FormViewLayout";
+    ViewData["Title"] = "Approval Management";
+}
+
+<div class="row">
+    <div class="col-12 pt-5">
+        <h3>Form Name: @Model.FormList.FormName.ToString()</h3>
+        @if (Model.FormList.FormDescription != null)
+        {
+            <p class="pt-1">Description: @Model.FormList.FormDescription.ToString()</p>
+        }
+        else
+        {
+            <p class="pt-1">Description: <b>Not Available</b></p>
+        }
+
+        @if (Model.FormList.GuidelineFile != null)
+        {
+            <p class="d-inline-block pr-3">User Manual:</p>
+            <a href="~/GuidelineFiles/@Model.FormList.UniqueGuidelineFile" target="_blank"><img width="25" src="~/assets/media/svg/files/pdf.svg" /></a>
+        }
+        else
+        {
+            <p class="d-inline-block pr-3">User Manual: <b>Not Available</b></p>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-4">
+        <div id="formio"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var hiddenShow = true;
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.FormList.FormData)));
+    var currentSubmission = JSON.parse((@Json.Serialize(Model.FormList.FormSubmittedData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.createForm(document.getElementById('formio'), currentForm, {
+        readOnly: true,
+        renderMode: 'form'
+    }).then(function (form) {
+        form.submission = {
+            data: currentSubmission
+        };
+    });
+</script>

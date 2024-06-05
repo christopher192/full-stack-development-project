@@ -1,0 +1,266 @@
+﻿@page "{FormId?}"
+@model WD_ERECORD_CORE.Pages.eRecord.FormViewEditorModel
+
+@{
+    Layout = "_FormViewLayout";
+    ViewData["Title"] = "My e-Record";
+}
+
+<div class="row">
+    <div class="col-12 pt-5">
+        <h3>Form Name: @Model.FormList.FormName</h3>
+
+        @if (Model.FormList.FormDescription != null)
+        {
+            <p class="pt-1">Description: @Model.FormList.FormDescription.ToString()</p>
+        }
+        else
+        {
+            <p class="pt-1">Description: <b>Not Available</b></p>
+        }
+
+        @if (Model.FormList.UniqueGuidelineFile != null)
+        {
+            <p class="d-inline-block pr-3">User Manual: </p>
+
+            <a href="~/GuidelineFiles/@Model.FormList.UniqueGuidelineFile" target="_blank"><img width="25" src="~/assets/media/svg/files/pdf.svg" /></a>
+        }
+        else
+        {
+            <p class="d-inline-block pr-3">User Manual: <b>Not Available</b></p>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-4">
+        <form id="submitformlist" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="FormList.Id" class="form-control" />
+                <input type="hidden" asp-for="FormList.FormName" class="form-control" />
+                <input type="hidden" asp-for="FormList.FormDescription" class="form-control" />
+                <input type="hidden" asp-for="FormList.CreatedBy" class="form-control" />
+                <input type="hidden" asp-for="FormList.UniqueGuidelineFile" class="form-control" />
+                <input type="hidden" asp-for="FormList.FormData" class="form-control" />
+                <input type="hidden" asp-for="FormList.FormSubmittedData" class="form-control" />
+                <input type="hidden" asp-for="SubmittedType" class="fosrm-control" />
+                <div id="formio"></div>
+            </div>
+            <div class="pt-3">
+                <div class="border-top">
+                    <div class="pt-3 pb-3 d-flex justify-content-between">
+                        <div>
+                            <button type="button" class="btn btn-secondary" onclick="Close()">Back</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
+                            <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var hiddenShow = false;
+    var formElement = document.getElementById('formio');
+    var currentForm = JSON.parse((@Json.Serialize(Model.FormList.FormData)));
+    var currentSubmission = JSON.parse((@Json.Serialize(Model.FormList.FormSubmittedData)));
+
+    for (var i = 0; i < currentForm.components.length; i++) {
+        if (currentForm.components[i].type === "button" && currentForm.components[i].label === "Submit" && currentForm.components[i].key === "submit") {
+            delete currentForm.components[i]
+        }
+    }
+
+    Formio.icons = 'fontawesome';
+    Formio.createForm(formElement, {
+        components: this.currentForm.components },
+        { noAlerts: true })
+    .then(function (form) {
+
+        form.submission = {
+            data: currentSubmission
+        };
+
+        form.on('submit', function (submission) {
+
+        });
+
+        form.on('change', function (changed) {
+            var submitFormJSON = document.getElementById('FormList_FormSubmittedData');
+            submitFormJSON.value = JSON.stringify(changed.data);
+        });
+
+        document.getElementById("submitBtn").onclick = function () {
+            var isValid = form.submit()
+                .then(formData => {
+                    let allowSubmit = true;
+                 
+                    for (const [key, value] of Object.entries(formData.data)) {
+                        if (key === "passwordValidation") {
+                            if (form.getComponent(key) !== null) {
+                                if (form.getComponent(key).component.type === 'password' && form.getComponent(key).component.type !== null) {
+                                    allowSubmit = false;
+
+                                    $.ajax('@Url.Action("ValidatePassword", "AuthorizedFunction")', {
+                                        type: 'POST',
+                                        async: false,
+                                        cache: false,
+                                        // contentType: "application/json; charset=utf-8",
+                                        data: { password: value },
+                                        // dataType: 'json',
+                                        success: function (respond) {
+                                            if (respond.hasOwnProperty('result')) {
+                                                if (respond.result === false) {
+                                                    // get parent element
+                                                    let parent = form.getComponent(key).element;
+
+                                                    if (parent !== null) {
+                                                        // set accept condition
+                                                        let acceptCondition = {
+                                                            'hasInput': false, 'hasErrorMessage': false, 'indexMapping': { 'input': -1, 'errorMessage': -1 }
+                                                        };
+
+                                                        // create custom error message
+                                                        let errorNode = document.createElement("div");
+                                                        errorNode.className = "form-text error";
+                                                        let errorTextDode = document.createTextNode("Password is not match");
+                                                        errorNode.appendChild(errorTextDode);
+
+                                                        if (parent.children.length > 0) {
+                                                            for (var i = 0; i < parent.children.length; i++) {
+                                                                if (parent.children[i].getAttribute('ref') === 'messageContainer') {
+                                                                    acceptCondition.indexMapping.errorMessage = i;
+                                                                    acceptCondition.hasErrorMessage = true;
+                                                                }
+                                                                else if (parent.children[i].getAttribute('ref') === 'element' && parent.children[i].children.length === 1) {
+                                                                    if (parent.children[i].children[0].nodeName === 'INPUT') {
+                                                                        acceptCondition.indexMapping.input = i;
+                                                                        acceptCondition.hasInput = true;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if (acceptCondition.hasInput && acceptCondition.hasErrorMessage) {
+                                                            // add css to parent class
+                                                            if (!parent.classList.contains('formio-error-wrapper')) {
+                                                                parent.classList.add('formio-error-wrapper');
+                                                            }
+
+                                                            if (!parent.classList.contains('has-message')) {
+                                                                parent.classList.add('has-message');
+                                                            }
+
+                                                            if (!parent.children[acceptCondition.indexMapping.input].children[0].classList.contains('is-invalid')) {
+                                                                // add css to input password
+                                                                parent.children[acceptCondition.indexMapping.input].children[0].classList.add('is-invalid');
+                                                            }
+
+                                                            if (parent.children[acceptCondition.indexMapping.errorMessage].childElementCount === 0) {
+                                                                // add custom error message
+                                                                parent.children[acceptCondition.indexMapping.errorMessage].appendChild(errorNode);
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                else if (respond.result === true) {
+                                                    // get parent element
+                                                    let parent = form.getComponent(key).element;
+
+                                                    if (parent !== null) {
+                                                        if (parent.classList.contains('formio-error-wrapper')) {
+                                                            parent.classList.remove('formio-error-wrapper');
+                                                        }
+
+                                                        if (parent.classList.contains('has-message')) {
+                                                            parent.classList.remove('has-message');
+                                                        }
+
+                                                        if (parent.children.length > 0) {
+                                                            for (var i = 0; i < parent.children.length; i++) {
+                                                                // remove error message
+                                                                if (parent.children[i].getAttribute('ref') === 'messageContainer' && parent.children[i].childElementCount > 0) {
+                                                                    while (parent.children[i].firstChild) {
+                                                                        parent.children[i].removeChild(parent.children[i].firstChild);
+                                                                    }
+                                                                }
+                                                                else if (parent.children[i].getAttribute('ref') === 'element' && parent.children[i].children.length === 1) {
+                                                                    if (parent.children[i].children[0].nodeName === 'INPUT' && parent.children[i].children[0].classList.contains('is-invalid')) {
+                                                                        parent.children[i].children[0].classList.remove('is-invalid');
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    allowSubmit = true;
+                                                }
+                                            } else if (respond.hasOwnProperty('errorMessage')) {
+                                                alert(respond.errorMessage)
+                                            }
+                                        }
+                                    });
+
+                                    formData.data[key] = 'true';
+                                }
+                            }
+                        }
+                    }
+
+                    var overideFormJSON = document.getElementById('FormList_FormSubmittedData');
+                    overideFormJSON.value = JSON.stringify(formData.data);
+
+                    return allowSubmit;
+                })
+                .catch((err) => {
+                    return false;
+                });
+
+            isValid.then(function (x) {
+                if (x) {
+                    var initializeForm = document.getElementById("submitformlist");
+                    var submitType = document.getElementById("SubmittedType");
+                    submitType.value = "Submit";
+
+                    initializeForm.submit();
+                }
+            });
+        }
+
+        document.getElementById("updateBtn").onclick = function () {
+            var overideFormJSON = document.getElementById('FormList_FormSubmittedData');
+            var formData = JSON.parse(overideFormJSON.value);
+
+            if (formData['passwordValidation']) {
+                formData['passwordValidation'] = '';
+
+                overideFormJSON.value = JSON.stringify(formData);
+            }
+
+            var initializeForm = document.getElementById("submitformlist");
+            var submitType = document.getElementById("SubmittedType");
+            submitType.value = "Update";
+
+            initializeForm.submit();
+        }
+    });
+
+    if ("@ViewData["Result"]" === "submit") {
+        Close();
+    }
+
+    function Close() {
+        parent.document.location.href = "@Url.Action("Index", "eRecord")";
+    }
+</script>

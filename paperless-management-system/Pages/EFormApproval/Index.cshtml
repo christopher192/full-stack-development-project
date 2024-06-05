@@ -1,0 +1,521 @@
+﻿@page "{FormId?}"
+@model WD_ERECORD_CORE.Pages.EFormApproval.IndexModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Approval Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "eform-approval" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Approval Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Body-->
+                    <div class="card-body">
+                        <form class="mb-15">
+                            <div class="row mb-6">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Form Name:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: eXX-X-XX-XX-XXXXX" data-col-index="0" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Form Description:</label>
+                                    <input type="text" class="form-control datatable-input" placeholder="E.g: For Production" data-col-index="1" />
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Status:</label>
+                                    <select class="form-control datatable-input" data-col-index="2">
+                                        <option value="">Select</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-8">
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Created Date:</label>
+                                    <div class="input-daterange input-group" id="createddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="3" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="3" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Modified Date:</label>
+                                    <div class="input-daterange input-group" id="modifieddate-datepicker">
+                                        <input type="text" class="form-control datatable-input" name="start" placeholder="From" data-col-index="4" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-ellipsis-h"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control datatable-input" name="end" placeholder="To" data-col-index="4" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mb-lg-0 mb-6">
+                                    <label>Export Action:</label>
+                                    <button class="btn btn-primary d-block" id="export_table">Export Table</button>
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                                        <span>
+                                            <i class="la la-search"></i>
+                                            <span>Search</span>
+                                        </span>
+                                    </button>&#160;&#160;
+                                    <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                                        <span>
+                                            <i class="la la-close"></i>
+                                            <span>Reset</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <!--begin: Datatable-->
+                        <table class="table table-bordered table-hover table-checkable" id="eformapproval_datatable" style="margin-top: 13px !important">
+                            <thead>
+                                <tr>
+
+                                    <th>Form Name</th>
+                                    <th>Description</th>
+                                    <th>Revision</th>
+                                    <th>Form Status</th>
+                                    <th>Approver Status</th>
+                                    <th>Approver</th>
+                                    <th>Created Date</th>
+                                    <th>Created By</th>
+                                    <th>Modified Date</th>
+                                    <th>Modified By</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                        <!--end: Datatable-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+<!-- Modal-->
+<div class="modal fade" id="TimeLineShowing" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Approval Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="MasterFormDetail"></div>
+                <div class="timeline timeline-2">
+                    <div class="timeline-bar"></div>
+                    <div id="TimeLineData"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+<script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+<script type="text/javascript">
+    var inputFormId = "@ViewData["InputFormId"]";
+    var isSuperAdmin = "@Model.isSuperAdmin" === "True" ? true : false;
+
+    var ApprovalAdvancedSearch = function () {
+        var initApprovalTable = function () {
+            var table = $("#eformapproval_datatable").DataTable({
+                stateSave: true,
+                processing: true,
+                serverSide: true,
+                paging: true,
+                responsive: true,
+                searching: { regex: true },
+                lengthMenu: [10, 25, 50, 100, 500, 1000, 2500, 5000],
+                dom: `<'row'<'col-sm-12'tr>>
+                <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
+                language: {
+                    'lengthMenu': 'Display _MENU_',
+                },
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        text: 'Export Excel',
+                        title: 'Approval List',
+                        exportOptions: {
+                            columns: ':not(:last-child)',
+                            modifier: {
+                                page: 'current'
+                            }
+                        }
+                    }
+                ],
+                ajax: {
+                    url: (isSuperAdmin ? "@Url.Action("LoadAllFormApprovalTable", "DataTable")" : "@Url.Action("LoadFormApprovalTable", "DataTable")"),
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    { data: "formName" },
+                    { data: "formDescription" },
+                    { data: "formRevision" },
+                    { data: "formStatus" },
+                    { data: "approverStatus" },
+                    { data: "approverName" },
+                    { data: "createdDate" },
+                    { data: "createdBy" },
+                    { data: "modifiedDate" },
+                    { data: "modifiedBy" },
+                    { data: null, responsivePriority: -1 }
+                ],
+                columnDefs: [
+                    {
+                        targets: 1,
+                        render: function (data, type, full, meta) {
+                            return data !== null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 2,
+                        render: function (data, type, full, meta) {
+                            return "Rev " + data;
+                        }
+                    },
+                    {
+                        targets: 3,
+                        render: function (data, type, full, meta) {
+                            var status = {
+                                'pending': { 'title': 'Pending', 'class': ' label-light-warning' },
+                                'approved': { 'title': 'Approved', 'class': ' label-light-success' },
+                                'rejected': { 'title': 'Rejected', 'class': ' label-light-danger' }
+                            }
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<a id="TriggerModel" href="javascript:;" class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</a>';
+                        },
+                    },
+                    {
+                        targets: 4,
+                        render: function (data, type, full, meta) {
+                            var status = {
+                                'pending': { 'title': 'Pending', 'class': ' label-light-warning' },
+                                'approved': { 'title': 'Approved', 'class': ' label-light-success' },
+                                'rejected': { 'title': 'Rejected', 'class': ' label-light-danger' }
+                            }
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="label label-lg font-weight-bold' + status[data].class + ' label-inline">' + status[data].title + '</span>';
+                        },
+                    },
+                    {
+                        targets: 5,
+                        render: function (data, type, full, meta) {
+                            return data != null ? data : "No Remark";
+                        },
+                    },
+                    {
+                        targets: 6,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 7,
+                        render: function (data) {
+                            return data != null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 8,
+                        render: function (data) {
+                            return (moment(data).isValid()) ? moment(data).format("DD MMM YY, h:mm:ss a") : "Not Available";
+                        }
+                    },
+                    {
+                        targets: 9,
+                        render: function (data) {
+                            return data != null ? data : "Not Available";
+                        }
+                    },
+                    {
+                        targets: -1,
+                        orderable: false,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<a class="btn btn-sm btn-clean btn-icon" title="View details" href="@Url.Action("TakeAction", "EFormApproval")/' + full.approverId + '"><i class="la la-eye"></i></a>';
+                        }
+                    }
+                ]
+            });
+
+
+            table.on('click', 'a#TriggerModel', function () {
+                var data = (typeof table.row(this).data() !== "undefined" ? table.row(this).data() : table.row($(this).parents('tr')).data());
+                var timeLineData = JSON.parse(data.json);
+
+                console.log(timeLineData);
+
+                // Comparer function
+                // Sort approval level
+                function GetSortOrder(prop) {
+                    return function (a, b) {
+                        if (a[prop] > b[prop]) {
+                            return 1;
+                        } else if (a[prop] < b[prop]) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                }
+
+                var approvalLevel = timeLineData.FormListApprovalLevels;
+
+                if (approvalLevel !== null) {
+                    approvalLevel.sort(GetSortOrder("Id"));
+                }
+
+                var approvers = [];
+                var pendingApproversDictionary = [];
+
+                for (var i = 0; i < approvalLevel.length; i++) {
+                    for (var j = 0; j < approvalLevel[i].FormListApprovers.length; j++) {
+                        if (approvalLevel[i].FormListApprovers[j].ApproverStatus === "approved" || approvalLevel[i].FormListApprovers[j].ApproverStatus === "rejected") {
+                            approvers.push(approvalLevel[i].FormListApprovers[j]);
+                        }
+                        else if (approvalLevel[i].ApprovalStatus === "pending" && approvalLevel[i].FormListApprovers[j].ApproverStatus === "pending") {
+                            pendingApproversDictionary.push({
+                                key: "Level " + (i + 1),
+                                value: approvalLevel[i].FormListApprovers[j]
+                            });
+                        }
+                    }
+                }
+
+                approvers.sort((a, b) => new Date(a.ApporverDate) - new Date(b.ApporverDate));
+
+                var WriteMasterFormHTML = "";
+                var WriteTimeLineHTML = "";
+
+                $("#MasterFormDetail").empty();
+                $("#TimeLineData").empty();
+
+                WriteMasterFormHTML += "<p>Form Name: <b>" + timeLineData.FormName + "</b></p>";
+                WriteMasterFormHTML += "<p>Description: <b>" + (timeLineData.FormDescription !== null ? timeLineData.FormDescription : "Not Available" ) + "</b></p>";
+
+                if (timeLineData.FormStatus === "pending") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-warning'>Pending</span></p>";
+                }
+                else if (timeLineData.FormStatus === "approved") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-success'>Approved</span></p>";
+                }
+                else if (timeLineData.FormStatus === "rejected") {
+                    WriteMasterFormHTML += "<p>Status: <span class='label label-inline label-light-danger'>Rejected</span></p>";
+                };
+
+                WriteTimeLineHTML += "<div class='timeline-item'>";
+                WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.CreatedBy + "</b> create form <b>" + timeLineData.FormName + "</b></span>";
+                WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.CreatedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                WriteTimeLineHTML += "</div>";
+                WriteTimeLineHTML += "</div>";
+
+                if (timeLineData.ModifiedBy !== null && timeLineData.ModifiedDate !== null) {
+                    WriteTimeLineHTML += "<div class='timeline-item'>";
+                    WriteTimeLineHTML += "<div class='timeline-badge'></div>";
+                    WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                    WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.ModifiedBy + "</b> modify form <b>" + timeLineData.FormName + "</b></span>";
+                    WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.ModifiedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                    WriteTimeLineHTML += "</div>";
+                    WriteTimeLineHTML += "</div>";
+                }
+
+                if (timeLineData.SubmittedBy !== null && timeLineData.SubmittedDate !== null) {
+                    WriteTimeLineHTML += "<div class='timeline-item'>";
+                    WriteTimeLineHTML += "<div class='timeline-badge bg-primary'></div>";
+                    WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                    WriteTimeLineHTML += "<span class='mr-3'>" + "User <b>" + timeLineData.SubmittedBy + "</b> submit form <b>" + timeLineData.FormName + "</b></span>";
+                    WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(timeLineData.SubmittedDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                    WriteTimeLineHTML += "</div>";
+                    WriteTimeLineHTML += "</div>";
+                }
+
+                for (var i = 0; i < approvers.length; i++) {
+                    if (approvers[i].ApproverStatus === "approved") {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge bg-success'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> approve form <b>" + timeLineData.FormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApporverDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+                    else if (approvers[i].ApproverStatus === "rejected") {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge bg-danger'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "Approver <b>" + approvers[i].ApproverName + "</b> reject form <b>" + timeLineData.FormName + "</b><br /><span class='ml-2'>- Remark: <b>" + (approvers[i].Remark !== null ? approvers[i].Remark : "No Remark") + "</b></span></span>";
+                        WriteTimeLineHTML += "<span class='text-muted text-right'>" + moment(approvers[i].ApporverDate).format("DD MMM YY, hh:mm:ss") + "</span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+                }
+
+                if (pendingApproversDictionary.length !== 0) {
+                    for (var i = 0; i < pendingApproversDictionary.length; i++) {
+                        WriteTimeLineHTML += "<div class='timeline-item'>";
+                        WriteTimeLineHTML += "<div class='timeline-badge bg-warning'></div>";
+                        WriteTimeLineHTML += "<div class='timeline-content d-flex align-items-center justify-content-between'>";
+                        WriteTimeLineHTML += "<span class='mr-3'>" + "Pending approver " + pendingApproversDictionary[i].key + " - <b>" + pendingApproversDictionary[i].value.ApproverName + "</b></span>";
+                        WriteTimeLineHTML += "</div>";
+                        WriteTimeLineHTML += "</div>";
+                    }
+                }
+
+                $("#MasterFormDetail").append(WriteMasterFormHTML);
+                $("#TimeLineData").append(WriteTimeLineHTML);
+
+                $("#TimeLineShowing").modal('show');
+            });
+
+            var filter = function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                table.column($(this).data('col-index')).search(val ? val : '', false, false).draw();
+            };
+
+            var asdasd = function (value, index) {
+                var val = $.fn.dataTable.util.escapeRegex(value);
+                table.column(index).search(val ? val : '', false, true);
+            };
+
+            if (inputFormId !== "") {
+                var val = inputFormId;
+
+                table.column(5).search(val ? val : '', false, false);
+                table.table().draw();
+            }
+
+            $('#kt_search').on('click', function (e) {
+                e.preventDefault();
+                var params = {};
+                $('.datatable-input').each(function () {
+                    var i = $(this).data('col-index');
+                    if (params[i]) {
+                        params[i] += '|' + $(this).val();
+                    }
+                    else {
+                        params[i] = $(this).val();
+                    }
+                });
+                $.each(params, function (i, val) {
+                    table.column(i).search(val ? val : '', false, false);
+                });
+                table.table().draw();
+            });
+
+            $('#kt_reset').on('click', function (e) {
+                e.preventDefault();
+                $('.datatable-input').each(function () {
+                    $(this).val('');
+                    table.column($(this).data('col-index')).search('', false, false);
+                });
+                table.column(5).search('', false, false);
+                table.table().draw();
+            });
+
+            $('#createddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                }
+            });
+
+            $('#modifieddate-datepicker').datepicker({
+                todayHighlight: true,
+                templates: {
+                    leftArrow: '<i class="la la-angle-left"></i>',
+                    rightArrow: '<i class="la la-angle-right"></i>',
+                }
+            });
+
+            $('#export_table').on('click', function (e) {
+                e.preventDefault();
+                table.button(0).trigger();
+            });
+
+            $("form").keypress(function (e) {
+                if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                    $('#kt_search').trigger("click");
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            });
+        };
+
+        return {
+            init: function () {
+                initApprovalTable();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        ApprovalAdvancedSearch.init();
+    });
+</script>

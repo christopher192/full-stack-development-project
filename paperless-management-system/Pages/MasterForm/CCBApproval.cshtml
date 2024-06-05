@@ -1,0 +1,191 @@
+﻿@page "{Id?}"
+@model WD_ERECORD_CORE.Pages.MasterForm.CCBApprovalModel
+
+@{
+    ViewData["Title"] = "CCB Approval";
+    Layout = "_FormBuilderLayout";
+}
+
+<!--begin::Wizard Nav-->
+@if (Model.FormMode == "Create")
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "create", "5" } })
+}
+else if (Model.FormMode == "Edit")
+{
+    @await Component.InvokeAsync("CreateEditWizardHeader", new { current = new string[] { "edit", "5" } })
+}
+else if (Model.FormMode == "EditOnly")
+{
+    @await Component.InvokeAsync("EditApprovalOnlyHeader", new { current = new string[] { "edit", "4" } })
+}
+<!--end::Wizard Nav-->
+
+<!--begin::Wizard Body-->
+<div class="row">
+    <div class="col-12 pt-3">
+        <!--begin::Wizard Form-->
+        <form method="post" class="px-2">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FormMode" />
+            <input type="hidden" asp-for="MasterFormId" />
+
+            @if (ViewData["Set All"] != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert">
+                        @ViewData["Set All"]
+                    </div>
+                </div>
+            }
+
+            @if (ViewData["Empty Approver"] != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning" role="alert">
+                        Unable to process, empty approver found!
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Approval Info</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Departments.Count(); i++)
+                        {
+                            // binding this list
+                            <input type="hidden" asp-for="Departments[i].Id" />
+                            <input type="hidden" asp-for="Departments[i].DepartmentName" />
+
+                            <tr>
+                                <th scope="row">@(i + 1)</th>
+                                <td>@Model.Departments[i].DepartmentName</td>
+                                <td>
+                                    <ul class="list-group">
+                                        @{
+                                            var ccbApprovalLevels = Model.CCBApprovalLevels.Where(x => x.MasterFormDepartmentId == Model.Departments[i].Id).ToList();
+                                        }
+
+                                        @if (ccbApprovalLevels.Count() > 0)
+                                        {
+                                            for (int x = 0; x < ccbApprovalLevels.Count(); x++)
+                                            {
+                                                <li class="list-group-item">
+                                                    <h6>Approval Level @(x + 1)</h6>
+
+                                                    @{
+                                                        var approvers = Model.CCBApprovers.Where(a => a.MasterFormCCBApprovalLevelId == ccbApprovalLevels[x].Id).OrderBy(x => x.Id).ToList();
+                                                    }
+
+                                                    @if (approvers.Count() > 0)
+                                                    {
+                                                        for (int j = 0; j < approvers.Count(); j++)
+                                                        {
+                                                            <div>
+                                                                <span>@(j + 1).</span>
+                                                                <span class="ml-3">@approvers[j].ApproverName</span>
+                                                                <span class="ml-3">@approvers[j].ApproverEmail</span>
+                                                                <span class="ml-3">@approvers[j].EmployeeId</span>
+                                                            </div>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p class="pl-3">Not Approver Yet</p>
+                                                    }
+
+                                                    <hr class="p-0 my-2" />
+
+                                                    <div>
+                                                        <div class="d-flex justify-content-end">
+                                                            <span>Reminder: @ccbApprovalLevels[x].EmailReminder @ccbApprovalLevels[x].ReminderType</span>
+                                                            <span class="pl-3">Notification Type: @ccbApprovalLevels[x].NotificationType</span>
+                                                            <span class="pl-3">Approval Condition: @ccbApprovalLevels[x].ApproveCondition</span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item">
+                                                <h6>Not Approval Yet</h6>
+                                            </li>
+                                        }
+                                    </ul>
+                                </td>
+                                <td>
+                                    <input type="submit" class="btn btn-primary" asp-page-handler="Set" asp-route-DepartmentId="@Model.Departments[i].Id" value="Set" />
+                                    <input type="submit" class="btn btn-primary" asp-page-handler="SetAll" asp-route-DepartmentId="@Model.Departments[i].Id" value="SetAll" />
+                                </td>
+                            </tr>
+                        }
+
+                        
+                        @{
+                            // bind these lists
+                            for (int i = 0; i < Model.CCBApprovalLevels.Count(); i++)
+                            {
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].Id" />
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].EmailReminder" />
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].ReminderType" />
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].ApproveCondition" />
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].NotificationType" />
+                                <input type="hidden" asp-for="CCBApprovalLevels[i].MasterFormDepartmentId" />
+                            }
+
+                            // bind these lists
+                            for (int i = 0; i < Model.CCBApprovers.Count(); i++)
+                            {
+                                <input type="hidden" asp-for="CCBApprovers[i].Id" />
+                                <input type="hidden" asp-for="CCBApprovers[i].ApproverName" />
+                                <input type="hidden" asp-for="CCBApprovers[i].ApproverEmail" />
+                                <input type="hidden" asp-for="CCBApprovers[i].EmployeeId" />
+                                <input type="hidden" asp-for="CCBApprovers[i].MasterFormCCBApprovalLevelId" />
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group border-top mt-4">
+                <div class="d-flex justify-content-between mt-3">
+                    <div>
+                        <button type="submit" id="previousButton" class="btn btn-primary" asp-page-handler="Previous">Previous</button>
+                    </div>
+                    <div>
+                        <button type="submit" id="saveButton" class="btn btn-primary" asp-page-handler="Save">Save</button>
+                        <button type="submit" id="nextButton" class="btn btn-primary" asp-page-handler="Next">Next</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!--end::Wizard Form-->
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type='text/javascript'>
+    function refreshAndClose() {
+        parent.document.location.href = "@Url.Action("Index", "MasterForm")";
+        window.opener.location.reload(true);
+        window.close();
+    }
+
+    var CloseWindowValue = '@TempData["Save"]';
+
+    if (CloseWindowValue !== null && CloseWindowValue !== '') {
+        refreshAndClose();
+    }
+</script>

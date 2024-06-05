@@ -1,0 +1,153 @@
+﻿@page "{ApproverId?}"
+@model WD_ERECORD_CORE.Pages.EFormApproval.TakeActionModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Approval Management";
+}
+
+<style>
+    .embed-responsive-1by1::before {
+        padding-top: 60% !important;
+    }
+</style>
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "eform-approval" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Approval Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Create-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <form class="form" method="post" onsubmit="return mySubmitFunction(event)">
+                            <input class="form-control" type="hidden" asp-for="FormListApprover.Id" />
+                            <input class="form-control" type="hidden" asp-for="FormListApprover.ApproverStatus" />
+                            <input class="form-control" type="hidden" asp-for="FormId" />
+                            <input class="form-control" type="hidden" asp-for="FormName" />
+                            <input class="form-control" type="hidden" asp-for="FormDescription" />
+                            <input class="form-control" type="hidden" asp-for="CreatedBy" />
+                            <input class="form-control" type="hidden" asp-for="FormListApprover.FormListApprovalLevelId" />
+
+                            <div class="form-group">
+                                <div class="embed-responsive embed-responsive-1by1 mobile-res">
+                                    <iframe class="embed-responsive-item" src="@Url.Action("FormView", "EFormApproval", new { FormId = Model.FormId })"></iframe>
+                                </div>
+                            </div>
+
+                            @if (Model.FormListApprover.ApproverStatus == "pending")
+                            {
+                                <div class="form-group">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label asp-for="FormListApprover.Remark">Leave Remark<span class="text-danger">*</span></label>
+                                                <textarea class="form-control" rows="3" asp-for="FormListApprover.Remark"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <a class="btn btn-secondary" asp-page="Index">Back</a>
+                                        </div>
+                                        <div>
+                                            <input type="submit" class="btn btn-danger mr-2" asp-page-handler="Action" asp-route-TakeAction="Reject" value="Reject" />
+                                            <input type="submit" class="btn btn-primary" asp-page-handler="Action" asp-route-TakeAction="Approve" value="Approve" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label asp-for="FormListApprover.Remark">Leave Remark<span class="text-danger">*</span></label>
+                                                <textarea class="form-control" rows="3" asp-for="FormListApprover.Remark" disabled></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a class="btn btn-secondary" asp-page="Index">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </form>
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Create-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/assets/js/scripts.bundle.js"></script>
+
+<script type='text/javascript'>
+    function mySubmitFunction(e) {
+        var eventSubmitterValue = e.submitter.value;
+
+        if (eventSubmitterValue === "Approve") {
+            return true;
+        }
+        else {
+            var remarkField = document.getElementById("FormListApprover_Remark");
+            if (remarkField.value === "") {
+                Swal.fire({
+                    title: "Remark field is needed!",
+                    text: "You are required to fill up the remark field when reject a form.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    showConfirmButton: false
+                })
+            }
+            else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+</script>
+

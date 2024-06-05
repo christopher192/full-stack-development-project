@@ -1,0 +1,84 @@
+﻿@page
+@model WD_ERECORD_CORE.Pages.FactoryCode.EditModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Factory Management";
+}
+
+<!--begin::Main-->
+<!--begin::Header Mobile-->
+<partial name="_PartialMobileHeader" />
+<!--end::Header Mobile-->
+<!--begin::Page-->
+<!--begin::Aside-->
+@await Component.InvokeAsync("Aside", new { current = "managenumberingscheme-factory" })
+<!--end::Aside-->
+<!--begin::Wrapper-->
+<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+    <!--begin::Header-->
+    @await Component.InvokeAsync("Header", new { current = "Factory Management" })
+    <!--end::Header-->
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Form Management List-->
+                <div class="card card-custom card-stretch">
+                    <!--begin::Header-->
+                    <div class="card-header">
+                        <div class="card-title">
+                            Edit Factory
+                        </div>
+                        <div class="card-toolbar">
+
+                        </div>
+                    </div>
+                    <!--end::Header-->
+                    <!--begin::Body-->
+                    <form method="post">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="FactoryList.Id" class="form-control" type="hidden" />
+                            <div class="form-group">
+                                <label asp-for="FactoryList.LocationCode" class="control-label"></label>
+                                <input asp-for="FactoryList.LocationCode" class="form-control" />
+                                <span asp-validation-for="FactoryList.LocationCode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FactoryList.LocationDescription" class="control-label"></label>
+                                <input asp-for="FactoryList.LocationDescription" class="form-control" />
+                                <span asp-validation-for="FactoryList.LocationDescription" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-page="Index" class="btn btn-light">Back</a>
+                            <input type="submit" value="Edit" class="btn btn-primary" />
+                        </div>
+                    </form>
+                    <!--end::Body-->
+                </div>
+                <!--end::Form Management List-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+    <!--begin::Footer-->
+    <partial name="_Footer" />
+    <!--end::Footer-->
+</div>
+<!--end::Wrapper-->
+<!--end::Page-->
+<!--end::Main-->
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,39 @@
+﻿@page
+@model LogoutModel
+
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<div class="d-flex flex-column flex-root">
+    <!--begin::Login-->
+    <div class="login login-3 login-signin-on d-flex flex-row-fluid">
+        <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url('@Url.Content("~/assets/media/bg/wd-bg.jpg")');">
+            <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
+                <!--begin::Logout Header-->
+                <div class="d-flex flex-center mb-15">
+                    <a href="#">
+                        <img src="~/assets/media/logos/wd-2.png" class="max-h-100px" alt="" />
+                        @*                        <img src="~/assets/media/logos/sophic.png" class="max-h-100px" alt="" />*@
+                    </a>
+                </div>
+                <!--end::Logout Header-->
+                <!--begin::Logout form-->
+                <div class="login-signin">
+                    <div class="mb-20">
+                        <h3>Logout Confirmation</h3>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-transparent-white font-weight-bold opacity-70 hover-opacity-85">Logout</button>
+                                <button type="button" class="btn btn-transparent-white font-weight-bold opacity-70 hover-opacity-85" onclick="history.go(-1);">Return</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <!--end::Logout form-->
+            </div>
+        </div>
+    </div>
+    <!--end::Login-->
+</div>
