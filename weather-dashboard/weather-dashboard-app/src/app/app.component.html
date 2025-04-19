@@ -1,0 +1,27 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Weather Forecast</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="startDate" class="form-label">Start Date:</label>
+                    <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate">
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button class="btn btn-primary" (click)="refreshData()">Refresh Data</button>
+                </div>
+                <div class="chart-container mb-4">
+                    <highcharts-chart *ngIf="chartOptions" [Highcharts]="Highcharts" [options]="chartOptions"></highcharts-chart>
+                </div>
+                <!-- <div class="ag-theme-alpine" style="height: 400px;">
+                    <ag-grid-angular 
+                        [gridOptions]="gridOptions"
+                        class="ag-theme-alpine">
+                    </ag-grid-angular>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
