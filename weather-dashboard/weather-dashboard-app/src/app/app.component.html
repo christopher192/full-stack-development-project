@@ -4,23 +4,63 @@
             <h2>Weather Forecast</h2>
         </div>
         <div class="card-body">
+            <!-- Row 1: Start Date Input and Refresh Button -->
             <div class="row mb-4">
-                <div class="col-md-6">
+                <!-- Start Date Input (Full width) -->
+                <div class="col-12">
                     <label for="startDate" class="form-label">Start Date:</label>
                     <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate">
                 </div>
-                <div class="col-md-6 d-flex align-items-end">
-                    <button class="btn btn-primary" (click)="refreshData()">Refresh Data</button>
+
+                <!-- Refresh Button (Full width) -->
+                <div class="col-12 mt-3">
+                    <button class="btn btn-primary" (click)="refreshData()" [disabled]="isLoading">Refresh Data</button>
                 </div>
-                <div class="chart-container mb-4">
-                    <highcharts-chart *ngIf="chartOptions" [Highcharts]="Highcharts" [options]="chartOptions"></highcharts-chart>
+            </div>
+
+            <!-- Row 2: Highcharts Chart (Full width) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <!-- Spinner (Shown when isLoading is true) -->
+                    <div *ngIf="isLoading" class="text-center mb-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <highcharts-chart
+                        *ngIf="!isLoading"
+                        [Highcharts]="Highcharts"
+                        [options]="chartOptions"
+                        style="width: 100%; height: 400px; display: block;"
+                    ></highcharts-chart>
                 </div>
-                <!-- <div class="ag-theme-alpine" style="height: 400px;">
-                    <ag-grid-angular 
+            </div>
+
+            <!-- Row 3: AG Grid Table (Full width) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <!-- Title for AG Grid -->
+                    <h3>Weather Data Table</h3>
+                </div>
+                <div class="col-12 mt-3" id="myGrid" *ngIf="isBrowser">
+                    <!-- Spinner (Shown when isLoading is true) -->
+                    <div *ngIf="isLoading" class="text-center mb-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <ag-grid-angular
+                        *ngIf="!isLoading"
+                        style="width: 100%; height: 550px;"
+                        class="ag-theme-alpine"
                         [gridOptions]="gridOptions"
-                        class="ag-theme-alpine">
-                    </ag-grid-angular>
-                </div> -->
+                        [rowData]="rowData"
+                        [columnDefs]="gridOptions.columnDefs"
+                        [pagination]="true"
+                        [defaultColDef]="{ resizable: true }"
+                        [domLayout]="'autoHeight'"
+                    ></ag-grid-angular>
+                </div>
             </div>
         </div>
     </div>

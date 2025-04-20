@@ -6,6 +6,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule } from '@angular/forms'
 
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
@@ -15,3 +17,5 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(FormsModule) 
   ]
 };
+
+ModuleRegistry.registerModules([AllCommunityModule]);
