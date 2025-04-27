@@ -16,6 +16,10 @@ Run Test
 ```
 ng test
 ```
+Stackblitz Link
+```
+https://stackblitz.com/github/christopher192/full-stack-development-project/tree/main/weather-dashboard/weather-dashboard-app?file=README.md
+```
 
 ### Question B (Open Ended Question): 
 Routing in Angular is responsible is responsible for interpreting a browser URL as an instruction to navigate to a client-generated view. The router is bound to links on a page to tell Angular to navigate the application view when a user clicks on it.
