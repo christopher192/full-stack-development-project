@@ -43,7 +43,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadData();
+    if (this.isBrowser) {
+      this.loadData();
+    }
   }
 
   loadData(): void {
@@ -74,6 +76,10 @@ export class AppComponent implements OnInit {
   }
 
   setupChart(data: any[]): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     this.chartOptions = {
       title: { text: 'Temperature & Humidity Trend' },
       xAxis: { categories: data.map(d => d.date) },
@@ -100,8 +106,7 @@ export class AppComponent implements OnInit {
       paginationPageSize: 20,
       defaultColDef: {
         resizable: true
-      },
-      domLayout: 'autoHeight'
+      }
     };
   }
 
