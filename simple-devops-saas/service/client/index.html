@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SSE Client</title>
+</head>
+<body>
+  <h1>Server-Sent Events Demo</h1>
+  <div id="messages"></div>
+
+  <script>
+    const eventSource = new EventSource("http://localhost:8080/events");
+
+    eventSource.onmessage = function(event) {
+      const messageDiv = document.getElementById("messages");
+      const newMessage = document.createElement("p");
+      newMessage.textContent = event.data;
+      messageDiv.appendChild(newMessage);
+    };
+
+    eventSource.onerror = function() {
+      console.error("EventSource failed.");
+    };
+  </script>
+</body>
+</html>
